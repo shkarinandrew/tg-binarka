@@ -1,3 +1,4 @@
+import { useInitData } from '@tma.js/sdk-react';
 import { FC, useEffect, useState } from 'react';
 import { IntlProvider } from 'react-intl';
 import { SyncLoader } from 'react-spinners';
@@ -13,6 +14,8 @@ import ModalSubscribe from '../ModalSubscribe';
 const App: FC = () => {
   const [channel, setChannel] = useState<Channel | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  const initData = useInitData();
 
   useEffect(() => {
     getChannel('binarkagogogo_bot')
@@ -36,6 +39,7 @@ const App: FC = () => {
         locale={LOCALES[channel?.geo || 'en'].value}
         defaultLocale={LOCALES[channel?.geo || 'en'].value}
       >
+        {JSON.stringify(initData)}
         <HomePage />
         {channel && (
           <ModalSubscribe
