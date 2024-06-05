@@ -1,4 +1,5 @@
-import { initInitData, useViewport } from '@tma.js/sdk-react';
+import { initInitData } from '@tma.js/sdk';
+import { useViewport } from '@tma.js/sdk-react';
 import { FC, useContext, useEffect, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 
@@ -78,6 +79,8 @@ const HomePage: FC = () => {
     }, 1_000);
     return () => clearInterval(interval);
   }, [data]);
+
+  console.log(initData);
 
   return (
     <div
