@@ -7,6 +7,7 @@ import { ChannelContext } from '../../Context/ChannelContext';
 import { LOCALES } from '../../i18n/locales';
 import { messages } from '../../i18n/messages';
 import { Channel } from '../../interface/Channel.interface';
+import HomePage from '../../pages/HomePage';
 import { getChannel } from '../../services/getChannel';
 import ModalSubscribe from '../ModalSubscribe';
 
@@ -39,7 +40,7 @@ const App: FC = () => {
         defaultLocale={LOCALES[channel?.geo || 'en'].value}
       >
         {JSON.stringify(initData)}
-        {/* <HomePage /> */}
+        <HomePage />
         {channel && (
           <ModalSubscribe
             channelName={channel.channel_title}

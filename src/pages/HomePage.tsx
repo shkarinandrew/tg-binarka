@@ -1,9 +1,5 @@
 import { FC, useContext, useEffect, useState } from 'react';
-import { FormattedMessage } from 'react-intl';
 
-import CupIcon from '../assets/icons/cup.svg';
-import Balance from '../components/Balance';
-import Button from '../components/Button';
 import Chart from '../components/Chart';
 import Header from '../components/Header';
 import Time from '../components/Time';
@@ -83,7 +79,7 @@ const HomePage: FC = () => {
         <Chart data={data} count={count} start={start} end={end} isWin={isWin} />
         <Time value={time} />
       </div>
-      <div className='w-full flex flex-col gap-[10px]'>
+      {/* <div className='w-full flex flex-col gap-[10px]'>
         <Button
           className='w-full bg-purple text-xs font-medium'
           leftIcon={<CupIcon />}
@@ -113,7 +109,7 @@ const HomePage: FC = () => {
             </div>
           </Button>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };
