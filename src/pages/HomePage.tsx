@@ -1,4 +1,4 @@
-import { retrieveLaunchParams, useViewport } from '@tma.js/sdk-react';
+import { useViewport } from '@tma.js/sdk-react';
 import { FC, useContext, useEffect, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 
@@ -17,10 +17,10 @@ const HomePage: FC = () => {
   const context = useContext(ChannelContext);
   const viewport = useViewport();
 
-  const { initDataRaw } = retrieveLaunchParams();
+  const urlParams = new URLSearchParams(window.location.search);
+  const myParam = urlParams.get('bot_username');
 
-  const params = new URLSearchParams(initDataRaw);
-  console.log(params.get('tgWebAppData'), params); // "6.2"
+  console.log(myParam);
 
   const [data, setData] = useState<number[]>([getRandom(64980, 65040)]);
   const [time, setTime] = useState(VITE_TIME_SECOND | 5);
