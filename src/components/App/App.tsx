@@ -1,11 +1,14 @@
 import { useInitData } from '@tma.js/sdk-react';
 import { FC, useEffect, useState } from 'react';
+import { IntlProvider } from 'react-intl';
 import { SyncLoader } from 'react-spinners';
 
 import { ChannelContext } from '../../Context/ChannelContext';
+import { LOCALES } from '../../i18n/locales';
+import { messages } from '../../i18n/messages';
 import { Channel } from '../../interface/Channel.interface';
-import HomePage from '../../pages/HomePage';
 import { getChannel } from '../../services/getChannel';
+import ModalSubscribe from '../ModalSubscribe';
 
 const App: FC = () => {
   const [channel, setChannel] = useState<Channel | null>(null);
@@ -30,20 +33,20 @@ const App: FC = () => {
 
   return (
     <ChannelContext.Provider value={channel}>
-      {/* <IntlProvider
+      <IntlProvider
         messages={messages[LOCALES[channel?.geo || 'en'].value]}
         locale={LOCALES[channel?.geo || 'en'].value}
         defaultLocale={LOCALES[channel?.geo || 'en'].value}
-      > */}
-      {JSON.stringify(initData)}
-      <HomePage />
-      {/* {channel && (
-        <ModalSubscribe
-          channelName={channel.channel_title}
-          channelSrc={channel.image_link}
-        />
-      )} */}
-      {/* </IntlProvider> */}
+      >
+        {JSON.stringify(initData)}
+        {/* <HomePage /> */}
+        {channel && (
+          <ModalSubscribe
+            channelName={channel.channel_title}
+            channelSrc={channel.image_link}
+          />
+        )}
+      </IntlProvider>
     </ChannelContext.Provider>
   );
 };
