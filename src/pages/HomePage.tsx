@@ -1,6 +1,9 @@
 import { FC, useContext, useEffect, useState } from 'react';
+import { FormattedMessage } from 'react-intl';
 
-import Header from '../components/Header';
+import CupIcon from '../assets/icons/cup.svg';
+import Balance from '../components/Balance';
+import Button from '../components/Button';
 import { ChannelContext } from '../Context/ChannelContext';
 import { getRandom } from '../utils/getRandom';
 
@@ -21,7 +24,8 @@ const HomePage: FC = () => {
   const handleSubscribe = () => {
     if (!context?.invite_link) return;
 
-    window.open(context.invite_link, '_blank');
+    // window.open(context.invite_link, '_blank');
+    console.log(context.invite_link);
   };
 
   const handleUpOrDown = () => {
@@ -72,12 +76,12 @@ const HomePage: FC = () => {
 
   return (
     <div className='w-full min-h-screen bg-[#1C1C1D] px-4 pt-5 pb-10 flex flex-col justify-between gap-5'>
-      <div className='flex flex-col gap-[10px]'>
+      {/* <div className='flex flex-col gap-[10px]'>
         <Header />
-        {/* <Chart data={data} count={count} start={start} end={end} isWin={isWin} /> */}
-        {/* <Time value={time} /> */}
-      </div>
-      {/* <div className='w-full flex flex-col gap-[10px]'>
+        <Chart data={data} count={count} start={start} end={end} isWin={isWin} />
+        <Time value={time} />
+      </div> */}
+      <div className='w-full flex flex-col gap-[10px]'>
         <Button
           className='w-full bg-purple text-xs font-medium'
           leftIcon={<CupIcon />}
@@ -107,7 +111,7 @@ const HomePage: FC = () => {
             </div>
           </Button>
         </div>
-      </div> */}
+      </div>
     </div>
   );
 };
