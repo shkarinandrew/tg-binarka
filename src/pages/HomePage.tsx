@@ -1,7 +1,6 @@
-import { useViewport } from '@tma.js/sdk-react';
+import { retrieveLaunchParams, useViewport } from '@tma.js/sdk-react';
 import { FC, useContext, useEffect, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { useSearchParams } from 'react-router-dom';
 
 import CupIcon from '../assets/icons/cup.svg';
 import Balance from '../components/Balance';
@@ -17,9 +16,10 @@ const { VITE_TIME_SECOND } = import.meta.env;
 const HomePage: FC = () => {
   const context = useContext(ChannelContext);
   const viewport = useViewport();
-  const [searchParams, setSearchParams] = useSearchParams();
 
-  console.log(searchParams);
+  const initData = retrieveLaunchParams();
+
+  console.log(initData);
 
   const [data, setData] = useState<number[]>([getRandom(64980, 65040)]);
   const [time, setTime] = useState(VITE_TIME_SECOND | 5);
