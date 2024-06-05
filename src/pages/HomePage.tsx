@@ -1,8 +1,6 @@
 import { FC, useContext, useEffect, useState } from 'react';
 
-import Chart from '../components/Chart';
 import Header from '../components/Header';
-import Time from '../components/Time';
 import { ChannelContext } from '../Context/ChannelContext';
 import { getRandom } from '../utils/getRandom';
 
@@ -76,8 +74,8 @@ const HomePage: FC = () => {
     <div className='w-full min-h-screen bg-[#1C1C1D] px-4 pt-5 pb-10 flex flex-col justify-between gap-5'>
       <div className='flex flex-col gap-[10px]'>
         <Header />
-        <Chart data={data} count={count} start={start} end={end} isWin={isWin} />
-        <Time value={time} />
+        {/* <Chart data={data} count={count} start={start} end={end} isWin={isWin} /> */}
+        {/* <Time value={time} /> */}
       </div>
       {/* <div className='w-full flex flex-col gap-[10px]'>
         <Button
