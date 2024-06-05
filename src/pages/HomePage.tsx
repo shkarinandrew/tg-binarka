@@ -17,10 +17,7 @@ const HomePage: FC = () => {
   const context = useContext(ChannelContext);
   const viewport = useViewport();
 
-  const urlParams = new URLSearchParams(window.location.search);
-  const myParam = urlParams.get('bot_username');
-
-  console.log(myParam);
+  console.log(window.location);
 
   const [data, setData] = useState<number[]>([getRandom(64980, 65040)]);
   const [time, setTime] = useState(VITE_TIME_SECOND | 5);
