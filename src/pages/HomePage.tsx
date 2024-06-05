@@ -79,8 +79,12 @@ const HomePage: FC = () => {
   }, [data]);
 
   return (
-    <div className='w-full min-h-screen bg-[#1C1C1D] px-4 pt-5 pb-10 flex flex-col justify-between gap-5'>
-      {JSON.stringify(viewport)}
+    <div
+      className='w-full bg-[#1C1C1D] px-4 pt-5 pb-10 flex flex-col justify-between gap-5 overflow-y-auto'
+      style={{
+        height: viewport?.stableHeight || '100vh',
+      }}
+    >
       <div className='flex flex-col gap-[10px]'>
         <Header />
         <Chart data={data} count={count} start={start} end={end} isWin={isWin} />
