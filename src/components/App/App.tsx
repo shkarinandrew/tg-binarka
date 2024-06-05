@@ -4,6 +4,7 @@ import { SyncLoader } from 'react-spinners';
 
 import { ChannelContext } from '../../Context/ChannelContext';
 import { Channel } from '../../interface/Channel.interface';
+import HomePage from '../../pages/HomePage';
 import { getChannel } from '../../services/getChannel';
 
 const App: FC = () => {
@@ -35,7 +36,7 @@ const App: FC = () => {
         defaultLocale={LOCALES[channel?.geo || 'en'].value}
       > */}
       {JSON.stringify(initData)}
-      {/* <HomePage /> */}
+      <HomePage />
       {/* {channel && (
         <ModalSubscribe
           channelName={channel.channel_title}
