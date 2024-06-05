@@ -8,16 +8,16 @@ import Button from '../components/Button';
 import Chart from '../components/Chart';
 import Header from '../components/Header';
 import Time from '../components/Time';
-import { ChannelContext } from '../Context/ChannelContext';
+import { ChannelContext } from '../context/ChannelContext';
 import { getRandom } from '../utils/getRandom';
 
 const { VITE_TIME_SECOND } = import.meta.env;
 
+type ButtonToggleType = 'up' | 'down';
+
 const HomePage: FC = () => {
   const context = useContext(ChannelContext);
   const viewport = useViewport();
-
-  console.log(window.location);
 
   const [data, setData] = useState<number[]>([getRandom(64980, 65040)]);
   const [time, setTime] = useState(VITE_TIME_SECOND | 5);
@@ -25,6 +25,7 @@ const HomePage: FC = () => {
   const [disabled, setDisabled] = useState(false);
   const [isWin, setIsWin] = useState<boolean | null>(null);
   const [end, setEnd] = useState(0);
+  const [type, setType] = useState<ButtonToggleType>();
 
   const count = data.at(-1) || 0;
 
@@ -34,10 +35,12 @@ const HomePage: FC = () => {
     window.open(context.invite_link, '_blank');
   };
 
-  const handleUpOrDown = () => {
+  const handleUpOrDown = (toggle: ButtonToggleType) => {
     setDisabled(true);
     setStart(count);
     setIsWin(null);
+    setEnd(0);
+    setType(toggle);
   };
 
   useEffect(() => {
@@ -48,12 +51,20 @@ const HomePage: FC = () => {
       setDisabled(false);
       setEnd(count);
 
-      if (count > start) {
-        setIsWin(true);
+      if (type === 'up' && count > start) {
+        return setIsWin(true);
       }
 
-      if (count <= start) {
-        setIsWin(false);
+      if (type === 'up' && count <= start) {
+        return setIsWin(false);
+      }
+
+      if (type === 'down' && count <= start) {
+        return setIsWin(true);
+      }
+
+      if (type === 'down' && count > start) {
+        return setIsWin(false);
       }
 
       return;
@@ -105,7 +116,7 @@ const HomePage: FC = () => {
         <div className='flex items-center gap-[10px] w-full'>
           <Button
             disabled={disabled}
-            onClick={handleUpOrDown}
+            onClick={() => handleUpOrDown('up')}
             className='bg-green w-full overflow-hidden text-sm !text-black relative font-semibold py-[9px] rounded-[10px] shadow-btn-green uppercase disabled:bg-green/50 disabled:cursor-not-allowed before:content-[""] before:w-[100px] before:h-[100px] before:bg-[#20FF80] before:z-0 before:absolute before:rotate-45 before:top-[25px] before:rounded-md disabled:before:bg-[#20FF80]/30'
           >
             <div className='z-10'>
@@ -114,7 +125,7 @@ const HomePage: FC = () => {
           </Button>
           <Button
             disabled={disabled}
-            onClick={handleUpOrDown}
+            onClick={() => handleUpOrDown('down')}
             className='bg-red w-full overflow-hidden text-sm font-semibold py-[9px] relative rounded-[10px] shadow-btn-red uppercase disabled:bg-red/50 disabled:cursor-not-allowed before:content-[""] before:w-[100px] before:h-[100px] before:bg-[#E75085] before:z-0 before:absolute before:rotate-45 before:bottom-[25px] before:rounded-md disabled:before:bg-[#E75085]/30'
           >
             <div className='z-10'>
