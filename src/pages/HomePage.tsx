@@ -4,6 +4,9 @@ import { FormattedMessage } from 'react-intl';
 import CupIcon from '../assets/icons/cup.svg';
 import Balance from '../components/Balance';
 import Button from '../components/Button';
+import Chart from '../components/Chart';
+import Header from '../components/Header';
+import Time from '../components/Time';
 import { ChannelContext } from '../Context/ChannelContext';
 import { getRandom } from '../utils/getRandom';
 
@@ -24,8 +27,7 @@ const HomePage: FC = () => {
   const handleSubscribe = () => {
     if (!context?.invite_link) return;
 
-    // window.open(context.invite_link, '_blank');
-    console.log(context.invite_link);
+    window.open(context.invite_link, '_blank');
   };
 
   const handleUpOrDown = () => {
@@ -76,11 +78,11 @@ const HomePage: FC = () => {
 
   return (
     <div className='w-full min-h-screen bg-[#1C1C1D] px-4 pt-5 pb-10 flex flex-col justify-between gap-5'>
-      {/* <div className='flex flex-col gap-[10px]'>
+      <div className='flex flex-col gap-[10px]'>
         <Header />
         <Chart data={data} count={count} start={start} end={end} isWin={isWin} />
         <Time value={time} />
-      </div> */}
+      </div>
       <div className='w-full flex flex-col gap-[10px]'>
         <Button
           className='w-full bg-purple text-xs font-medium'
