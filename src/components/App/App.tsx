@@ -1,30 +1,25 @@
-import { FC, useEffect, useState } from 'react';
+import { FC } from 'react';
 import { IntlProvider } from 'react-intl';
 import { SyncLoader } from 'react-spinners';
 
-import { ChannelContext } from '../../Context/ChannelContext';
+import { ChannelContext } from '../../context/ChannelContext';
+import { useAxios } from '../../hooks/useAxios';
 import { LOCALES } from '../../i18n/locales';
 import { messages } from '../../i18n/messages';
 import { Channel } from '../../interface/Channel.interface';
 import HomePage from '../../pages/HomePage';
-import { getChannel } from '../../services/getChannel';
 import ModalSubscribe from '../ModalSubscribe';
 
 const App: FC = () => {
-  const [channel, setChannel] = useState<Channel | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const urlParams = new URLSearchParams(window.location.search);
+  const botUsername = urlParams.get('bot_username') || 'binarkagogogo_bot';
 
-  // const initData = useInitData();
+  const { loading, data: channel } = useAxios<Channel>(
+    `https://gw.dev.slaver.vip/webapp/credentials/${botUsername}`,
+    'GET',
+  );
 
-  useEffect(() => {
-    getChannel('binarkagogogo_bot')
-      .then((data) => {
-        setChannel(data);
-      })
-      .finally(() => setIsLoading(false));
-  }, []);
-
-  if (isLoading)
+  if (loading)
     return (
       <div className='w-full h-screen flex justify-center items-center fixed top-0 left-0 bg-black text-white'>
         <SyncLoader color='#fff' />

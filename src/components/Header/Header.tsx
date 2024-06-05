@@ -3,7 +3,7 @@ import { FormattedMessage } from 'react-intl';
 
 import GrammerlyIcon from '../../assets/icons/grammerly.svg';
 import InformationIcon from '../../assets/icons/information.svg';
-import { ChannelContext } from '../../Context/ChannelContext';
+import { ChannelContext } from '../../context/ChannelContext';
 import { getRandom } from '../../utils/getRandom';
 
 const randomUsers = getRandom(250, 270);
