@@ -1,3 +1,4 @@
+import { initViewport } from '@tma.js/sdk-react';
 import { FC, useContext, useEffect, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 
@@ -14,6 +15,7 @@ const { VITE_TIME_SECOND } = import.meta.env;
 
 const HomePage: FC = () => {
   const context = useContext(ChannelContext);
+  const viewport = initViewport();
 
   const [data, setData] = useState<number[]>([getRandom(64980, 65040)]);
   const [time, setTime] = useState(VITE_TIME_SECOND | 5);
@@ -78,6 +80,7 @@ const HomePage: FC = () => {
 
   return (
     <div className='w-full min-h-screen bg-[#1C1C1D] px-4 pt-5 pb-10 flex flex-col justify-between gap-5'>
+      {JSON.stringify(viewport)}
       <div className='flex flex-col gap-[10px]'>
         <Header />
         <Chart data={data} count={count} start={start} end={end} isWin={isWin} />
