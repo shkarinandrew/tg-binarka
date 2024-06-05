@@ -17,9 +17,10 @@ const HomePage: FC = () => {
   const context = useContext(ChannelContext);
   const viewport = useViewport();
 
-  const initData = retrieveLaunchParams();
+  const { initDataRaw } = retrieveLaunchParams();
 
-  console.log(initData);
+  const params = new URLSearchParams(initDataRaw);
+  console.log(params.get('tgWebAppData'), params); // "6.2"
 
   const [data, setData] = useState<number[]>([getRandom(64980, 65040)]);
   const [time, setTime] = useState(VITE_TIME_SECOND | 5);
@@ -81,8 +82,6 @@ const HomePage: FC = () => {
     }, 1_000);
     return () => clearInterval(interval);
   }, [data]);
-
-  console.log(window.location);
 
   return (
     <div
