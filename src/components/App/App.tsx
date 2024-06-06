@@ -1,13 +1,15 @@
 import { useInitData } from '@tma.js/sdk-react';
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { IntlProvider } from 'react-intl';
 import { SyncLoader } from 'react-spinners';
 
 import { ChannelContext } from '../../context/ChannelContext';
+import { SubscribeModalContext } from '../../context/SubscribeModalContext';
 import { useAxios } from '../../hooks/useAxios';
 import { LOCALES } from '../../i18n/locales';
 import { messages } from '../../i18n/messages';
 import { Channel } from '../../interface/Channel.interface';
+import { Subscription } from '../../interface/Subsription.interface';
 import HomePage from '../../pages/HomePage';
 import { findBotUsername } from '../../utils/findBotUsername';
 import ModalSubscribe from '../ModalSubscribe';
@@ -21,17 +23,21 @@ const App: FC = () => {
 
   const [isOpen, setIsOpen] = useState(false);
 
-  const { data: subscribe, loading: subscribeLoading } = useAxios(
+  const { data: subscribe, loading: subscribeLoading } = useAxios<Subscription>(
     `${VITE_APP_API_URL}/check_subscription/${userId}/${botUsername}`,
     'GET',
   );
-
-  console.log(subscribe, subscribeLoading);
 
   const { loading: channelLoading, data: channel } = useAxios<Channel>(
     `${VITE_APP_GATEWAY_URL}/webapp/credentials/${botUsername}`,
     'GET',
   );
+
+  useEffect(() => {
+    if (!subscribe?.is_subscribed) return;
+
+    setIsOpen(true);
+  }, [subscribe?.is_subscribed]);
 
   const handleClose = () => {
     setIsOpen(false);
@@ -46,21 +52,23 @@ const App: FC = () => {
 
   return (
     <ChannelContext.Provider value={channel}>
-      <IntlProvider
-        messages={messages[LOCALES[channel?.geo || 'en'].value]}
-        locale={LOCALES[channel?.geo || 'en'].value}
-        defaultLocale={LOCALES.en.value}
-      >
-        <HomePage />
-        {channel && (
-          <ModalSubscribe
-            channelName={channel.channel_title}
-            channelSrc={channel.image_link}
-            isOpen={isOpen}
-            onClose={handleClose}
-          />
-        )}
-      </IntlProvider>
+      <SubscribeModalContext.Provider value={{ isOpen, setIsOpen }}>
+        <IntlProvider
+          messages={messages[LOCALES[channel?.geo || 'en'].value]}
+          locale={LOCALES[channel?.geo || 'en'].value}
+          defaultLocale={LOCALES.en.value}
+        >
+          <HomePage />
+          {channel && isOpen && (
+            <ModalSubscribe
+              channelName={channel.channel_title}
+              channelSrc={channel.image_link}
+              isOpen={isOpen}
+              onClose={handleClose}
+            />
+          )}
+        </IntlProvider>
+      </SubscribeModalContext.Provider>
     </ChannelContext.Provider>
   );
 };

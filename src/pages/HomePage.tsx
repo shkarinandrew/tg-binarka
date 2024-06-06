@@ -9,8 +9,10 @@ import Chart from '../components/Chart';
 import Header from '../components/Header';
 import Time from '../components/Time';
 import { ChannelContext } from '../context/ChannelContext';
+import { SubscribeModalContext } from '../context/SubscribeModalContext';
 import { getBalance } from '../services/getBalance';
 import { updateBalance } from '../services/updateBalance';
+import { updateIncreaseWins } from '../services/updateIncreaseWins';
 import { getRandom } from '../utils/getRandom';
 
 const { VITE_TIME_SECOND, VITE_COUNT_WIN_OR_LOSE } = import.meta.env;
@@ -19,6 +21,7 @@ type ButtonToggleType = 'up' | 'down';
 
 const HomePage: FC = () => {
   const context = useContext(ChannelContext);
+  const contextSubscribe = useContext(SubscribeModalContext);
 
   const initData = useInitData();
   const viewport = useViewport();
@@ -63,6 +66,11 @@ const HomePage: FC = () => {
       setBalance((prev) => prev + countWinOrLose);
 
       updateBalance(userId || 0, countWinOrLose);
+      updateIncreaseWins(userId || 0).then((res) => {
+        if (!res) return;
+
+        contextSubscribe?.setIsOpen(res);
+      });
     },
     [userId],
   );
