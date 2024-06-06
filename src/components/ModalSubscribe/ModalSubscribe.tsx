@@ -1,33 +1,21 @@
-import { useInitData, useUtils } from '@tma.js/sdk-react';
-import { FC, useContext, useState } from 'react';
+import { useUtils } from '@tma.js/sdk-react';
+import { FC, useContext } from 'react';
 import { FormattedMessage } from 'react-intl';
 
 import { ChannelContext } from '../../context/ChannelContext';
-import { useAxios } from '../../hooks/useAxios';
-import { findBotUsername } from '../../utils/findBotUsername';
 import Button from '../Button';
 import Modal from '../Modal';
 import { IModalSubscribe } from './ModalSubscribe.interface';
 
-const { VITE_APP_API_URL } = import.meta.env;
-
-const ModalSubscribe: FC<IModalSubscribe> = ({ channelName, channelSrc }) => {
+const ModalSubscribe: FC<IModalSubscribe> = ({
+  channelName,
+  channelSrc,
+  isOpen,
+  onClose,
+}) => {
   const context = useContext(ChannelContext);
-  const [isOpen, setIsOpen] = useState(true);
 
   const utils = useUtils();
-  const initData = useInitData();
-
-  const userId = initData?.user?.id;
-
-  const botUsername = findBotUsername();
-
-  const { data, loading } = useAxios(
-    `${VITE_APP_API_URL}/check_subscription/${userId}/${botUsername}`,
-    'GET',
-  );
-
-  console.log(data, loading);
 
   const handleSubscribe = () => {
     if (!context?.invite_link) return;
@@ -35,12 +23,8 @@ const ModalSubscribe: FC<IModalSubscribe> = ({ channelName, channelSrc }) => {
     utils.openTelegramLink(context.invite_link);
   };
 
-  const handleClose = () => {
-    setIsOpen(false);
-  };
-
   return (
-    <Modal isOpen={isOpen} onClose={handleClose}>
+    <Modal isOpen={isOpen} onClose={onClose}>
       <div className='min-w-[285px] max-w-[300px] flex flex-col items-center gap-4'>
         <div className='flex flex-col items-center gap-2'>
           <div className='w-[100px] h-[100px] rounded-full overflow-hidden border-4 border-primary-100'>
