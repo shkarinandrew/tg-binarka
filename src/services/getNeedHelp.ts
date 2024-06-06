@@ -1,7 +1,9 @@
 import axios from 'axios';
 
+const { VITE_APP_API_URL } = import.meta.env;
+
 export const getNeedHelp = async (userId: number, bot_username: string) => {
-  const res = await axios.post(`https://notwebnotapp.click/api/need_help/${userId}`, {
+  const res = await axios.post(`${VITE_APP_API_URL}/need_help/${userId}`, {
     data: {
       bot_username,
     },

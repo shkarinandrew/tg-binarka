@@ -11,12 +11,14 @@ import HomePage from '../../pages/HomePage';
 import { findBotUsername } from '../../utils/findBotUsername';
 import ModalSubscribe from '../ModalSubscribe';
 
+const { VITE_APP_GATEWAY_URL } = import.meta.env;
+
 const App: FC = () => {
   // TODO: убрать мок
   const botUsername = findBotUsername() || 'binarkagogogo_bot';
 
   const { loading, data: channel } = useAxios<Channel>(
-    `https://gw.dev.slaver.vip/webapp/credentials/${botUsername}`,
+    `${VITE_APP_GATEWAY_URL}/webapp/credentials/${botUsername}`,
     'GET',
   );
 

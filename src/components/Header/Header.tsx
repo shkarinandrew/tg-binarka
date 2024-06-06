@@ -1,4 +1,4 @@
-import { useInitData } from '@tma.js/sdk-react';
+import { useInitData, useMiniApp } from '@tma.js/sdk-react';
 import { FC, useEffect, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 
@@ -17,6 +17,7 @@ const Header: FC = () => {
   const botUsername = findBotUsername() || 'binarkagogogo_bot';
 
   const initData = useInitData();
+  const miniApp = useMiniApp();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -27,7 +28,7 @@ const Header: FC = () => {
 
   const handleClick = () => {
     const userId = initData?.user?.id;
-    getNeedHelp(userId || 0, botUsername);
+    getNeedHelp(userId || 0, botUsername).then(() => miniApp.close());
   };
 
   return (
