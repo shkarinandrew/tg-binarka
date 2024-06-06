@@ -68,7 +68,13 @@ const HomePage: FC = () => {
 
       updateBalance(userId || 0, countWinOrLose);
       updateIncreaseWins(userId || 0).then(() => {
-        getWins(userId || 0).then((res) => contextSubscribe?.setIsOpen(res));
+        if (contextSubscribe?.isSubscribed) return;
+
+        getWins(userId || 0).then(({ wins }) => {
+          if (wins < 4) return;
+          contextSubscribe?.setIsOpen(!!wins);
+          contextSubscribe?.isSubscribed;
+        });
       });
     },
     [userId],

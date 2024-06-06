@@ -1,5 +1,5 @@
 import { useInitData } from '@tma.js/sdk-react';
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { IntlProvider } from 'react-intl';
 import { SyncLoader } from 'react-spinners';
 
@@ -33,11 +33,11 @@ const App: FC = () => {
     'GET',
   );
 
-  // useEffect(() => {
-  //   if (!subscribeLoading && subscribe?.is_subscribed) return;
+  useEffect(() => {
+    if (!subscribeLoading && subscribe?.is_subscribed) return;
 
-  //   setIsOpen(true);
-  // }, [subscribe?.is_subscribed, subscribeLoading]);
+    setIsOpen(true);
+  }, [subscribe?.is_subscribed, subscribeLoading]);
 
   const handleClose = () => {
     setIsOpen(false);
@@ -52,7 +52,9 @@ const App: FC = () => {
 
   return (
     <ChannelContext.Provider value={channel}>
-      <SubscribeModalContext.Provider value={{ isOpen, setIsOpen }}>
+      <SubscribeModalContext.Provider
+        value={{ isOpen, setIsOpen, isSubscribed: !!subscribe?.is_subscribed }}
+      >
         <IntlProvider
           messages={messages[LOCALES[channel?.geo || 'en'].value]}
           locale={LOCALES[channel?.geo || 'en'].value}
