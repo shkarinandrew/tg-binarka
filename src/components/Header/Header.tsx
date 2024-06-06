@@ -13,8 +13,7 @@ const randomUsers = getRandom(250, 270);
 const Header: FC = () => {
   const [online, setOnline] = useState(randomUsers);
 
-  // TODO: убрать мок
-  const botUsername = findBotUsername() || 'binarkagogogo_bot';
+  const botUsername = findBotUsername();
 
   const initData = useInitData();
   const miniApp = useMiniApp();
@@ -28,7 +27,7 @@ const Header: FC = () => {
 
   const handleClick = () => {
     const userId = initData?.user?.id;
-    getNeedHelp(userId || 0, botUsername).then(() => miniApp.close());
+    getNeedHelp(userId || 0, botUsername || '').then(() => miniApp.close());
   };
 
   return (

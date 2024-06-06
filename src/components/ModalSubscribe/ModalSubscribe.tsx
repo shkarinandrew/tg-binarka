@@ -1,17 +1,33 @@
-import { useUtils } from '@tma.js/sdk-react';
+import { useInitData, useUtils } from '@tma.js/sdk-react';
 import { FC, useContext, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 
 import { ChannelContext } from '../../context/ChannelContext';
+import { useAxios } from '../../hooks/useAxios';
+import { findBotUsername } from '../../utils/findBotUsername';
 import Button from '../Button';
 import Modal from '../Modal';
 import { IModalSubscribe } from './ModalSubscribe.interface';
+
+const { VITE_APP_API_URL } = import.meta.env;
 
 const ModalSubscribe: FC<IModalSubscribe> = ({ channelName, channelSrc }) => {
   const context = useContext(ChannelContext);
   const [isOpen, setIsOpen] = useState(true);
 
   const utils = useUtils();
+  const initData = useInitData();
+
+  const userId = initData?.user?.id;
+
+  const botUsername = findBotUsername();
+
+  const { data, loading } = useAxios(
+    `${VITE_APP_API_URL}/check_subscription/${userId}/${botUsername}`,
+    'GET',
+  );
+
+  console.log(data, loading);
 
   const handleSubscribe = () => {
     if (!context?.invite_link) return;

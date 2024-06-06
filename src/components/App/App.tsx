@@ -14,8 +14,7 @@ import ModalSubscribe from '../ModalSubscribe';
 const { VITE_APP_GATEWAY_URL } = import.meta.env;
 
 const App: FC = () => {
-  // TODO: убрать мок
-  const botUsername = findBotUsername() || 'binarkagogogo_bot';
+  const botUsername = findBotUsername();
 
   const { loading, data: channel } = useAxios<Channel>(
     `${VITE_APP_GATEWAY_URL}/webapp/credentials/${botUsername}`,
