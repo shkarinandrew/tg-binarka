@@ -1,4 +1,4 @@
-import { useInitData, useViewport } from '@tma.js/sdk-react';
+import { useInitData, useUtils, useViewport } from '@tma.js/sdk-react';
 import { FC, useCallback, useContext, useEffect, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 
@@ -22,6 +22,7 @@ const HomePage: FC = () => {
 
   const initData = useInitData();
   const viewport = useViewport();
+  const utils = useUtils();
 
   const userId = initData?.user?.id;
 
@@ -43,7 +44,7 @@ const HomePage: FC = () => {
   const handleSubscribe = () => {
     if (!context?.invite_link) return;
 
-    window.open(context.invite_link, '_blank');
+    utils.openTelegramLink(context.invite_link);
   };
 
   const handleUpOrDown = (toggle: ButtonToggleType) => {
