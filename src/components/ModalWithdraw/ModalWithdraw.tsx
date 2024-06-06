@@ -11,7 +11,7 @@ import Input from '../Input';
 import Modal from '../Modal';
 import { IModalWithdraw } from './ModalWithdraw.interface';
 
-const ModalWithdraw: FC<IModalWithdraw> = ({ balance }) => {
+const ModalWithdraw: FC<IModalWithdraw> = ({ balance, setBalance }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [active, setActive] = useState(0);
 
@@ -57,7 +57,13 @@ const ModalWithdraw: FC<IModalWithdraw> = ({ balance }) => {
     validationSchema,
     onSubmit: (values) => {
       const details = parseInt(values.details, 10);
-      withdrawBalance(userId || 0, details, botUsername || '').then(handleClose);
+      withdrawBalance(userId || 0, details, botUsername || '').then(
+        ({ new_balance, message }) => {
+          setBalance(new_balance);
+          handleClose();
+          alert(message);
+        },
+      );
     },
   });
 

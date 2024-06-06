@@ -149,7 +149,7 @@ const HomePage: FC = () => {
         >
           <FormattedMessage id='subscription_btn' />
         </Button>
-        <Balance value={balance} isWin={isWin} />
+        <Balance value={balance} isWin={isWin} setBalance={setBalance} />
         <div className='flex items-center gap-[10px] w-full'>
           <Button
             disabled={disabled}

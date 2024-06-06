@@ -6,7 +6,7 @@ import { IBalance } from './Balance.interface';
 
 const { VITE_COUNT_WIN_OR_LOSE } = import.meta.env;
 
-const Balance: FC<IBalance> = ({ value, isWin }) => {
+const Balance: FC<IBalance> = ({ value, isWin, setBalance }) => {
   const isNotNullWin = isWin !== null;
   const classNameIsWin = isNotNullWin ? (isWin ? 'text-green' : 'text-red') : '';
 
@@ -22,7 +22,7 @@ const Balance: FC<IBalance> = ({ value, isWin }) => {
           </span>
         )}
       </div>
-      <ModalWithdraw balance={value} />
+      <ModalWithdraw balance={value} setBalance={setBalance} />
     </div>
   );
 };
