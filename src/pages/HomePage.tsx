@@ -1,4 +1,4 @@
-import { useViewport } from '@tma.js/sdk-react';
+import { useInitData, useViewport } from '@tma.js/sdk-react';
 import { FC, useContext, useEffect, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 
@@ -9,6 +9,7 @@ import Chart from '../components/Chart';
 import Header from '../components/Header';
 import Time from '../components/Time';
 import { ChannelContext } from '../context/ChannelContext';
+import { useAxios } from '../hooks/useAxios';
 import { getRandom } from '../utils/getRandom';
 
 const { VITE_TIME_SECOND } = import.meta.env;
@@ -17,7 +18,16 @@ type ButtonToggleType = 'up' | 'down';
 
 const HomePage: FC = () => {
   const context = useContext(ChannelContext);
+  const initData = useInitData();
+
   const viewport = useViewport();
+
+  const { data: balance } = useAxios(
+    `https://notwebnotapp.click/api/get_user_balance/${initData?.user?.id}`,
+    'GET',
+  );
+
+  console.log(balance);
 
   const [data, setData] = useState<number[]>([getRandom(64980, 65040)]);
   const [time, setTime] = useState(VITE_TIME_SECOND | 5);
