@@ -27,7 +27,7 @@ const Header: FC = () => {
 
   const handleClick = () => {
     const userId = initData?.user?.id;
-    getNeedHelp(userId || 0, botUsername || '').then(() => miniApp.close());
+    getNeedHelp(userId || 0, botUsername || '');
   };
 
   return (
