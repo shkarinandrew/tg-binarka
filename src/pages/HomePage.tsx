@@ -56,19 +56,14 @@ const HomePage: FC = () => {
 
   const winOrLoseUpdate = useCallback(
     (toggle: boolean) => {
+      const countWinOrLose = toggle ? 10 : -10;
+
       setIsWin(toggle);
+      setBalance((prev) => prev + countWinOrLose);
 
-      setBalance((prev) => {
-        if (!toggle) {
-          return prev - 10;
-        }
-
-        return prev + 10;
-      });
-
-      updateBalance(userId || 0, balance);
+      updateBalance(userId || 0, countWinOrLose);
     },
-    [userId, balance],
+    [userId],
   );
 
   useEffect(() => {
