@@ -12,7 +12,7 @@ import Modal from '../Modal';
 import { IModalWithdraw } from './ModalWithdraw.interface';
 
 const ModalWithdraw: FC<IModalWithdraw> = ({ balance }) => {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const [active, setActive] = useState(0);
 
   const intl = useIntl();
