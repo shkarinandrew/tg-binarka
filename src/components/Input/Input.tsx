@@ -18,6 +18,7 @@ const Input: FC<IInput> = ({
       )}
       <input
         id={id}
+        type='text'
         className={`w-full px-2 py-1 text-xs outline-none border-2 border-purple rounded-md bg-black ${className}`}
         {...props}
       />

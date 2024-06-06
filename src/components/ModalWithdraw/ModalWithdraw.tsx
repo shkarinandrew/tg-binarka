@@ -1,14 +1,26 @@
-import { FC, useState } from 'react';
+import { useInitData } from '@tma.js/sdk-react';
+import { useFormik } from 'formik';
+import { FC, useCallback, useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
+import * as Yup from 'yup';
 
-import RadioIcon from '../../assets/icons/radio.svg';
+import { withdrawBalance } from '../../services/withdrawBalance';
+import { findBotUsername } from '../../utils/findBotUsername';
 import Button from '../Button';
 import Input from '../Input';
 import Modal from '../Modal';
+import { IModalWithdraw } from './ModalWithdraw.interface';
 
-const ModalWithdraw: FC = () => {
-  const [isOpen, setIsOpen] = useState(false);
+const ModalWithdraw: FC<IModalWithdraw> = ({ balance }) => {
+  const [isOpen, setIsOpen] = useState(true);
+  const [active, setActive] = useState(0);
+
   const intl = useIntl();
+
+  const initData = useInitData();
+  const userId = initData?.user?.id;
+
+  const botUsername = findBotUsername();
 
   const handleClose = () => {
     setIsOpen(false);
@@ -16,6 +28,38 @@ const ModalWithdraw: FC = () => {
   const handleOpen = () => {
     setIsOpen(true);
   };
+
+  const validationSchema = Yup.object({
+    amount: Yup.string().trim().required('Введите номер карты или счета'),
+    details: Yup.string()
+      .trim()
+      .matches(/^\d+$/, 'Поле должно содержать только цифры')
+      .test(
+        'length',
+        (value) => {
+          const count = parseInt(value.value, 10);
+          if (count > balance) {
+            return `Превышен лимит, вам доступно ${balance}$`;
+          }
+        },
+        () => {
+          return false;
+        },
+      )
+      .required('Введите сумму вывода'),
+  });
+
+  const formik = useFormik({
+    initialValues: {
+      amount: '',
+      details: '',
+    },
+    validationSchema,
+    onSubmit: (values) => {
+      const details = parseInt(values.details, 10);
+      withdrawBalance(userId || 0, details, botUsername || '').then(handleClose);
+    },
+  });
 
   const placeholderDetails = intl.formatMessage({
     id: 'withdraw_modal_placeholder_details',
@@ -28,6 +72,21 @@ const ModalWithdraw: FC = () => {
   const labelAmount = intl.formatMessage({ id: 'amount' });
   const labelDetails = intl.formatMessage({ id: 'details' });
 
+  const isActive = useCallback(
+    (count: number) => {
+      if (active === count) {
+        return 'bg-purple';
+      }
+
+      return '';
+    },
+    [active],
+  );
+
+  const handleSelectType = (count: number) => {
+    setActive(count);
+  };
+
   return (
     <>
       <Button onClick={handleOpen} className='bg-primary-100 text-xs px-[7px] py-0.5'>
@@ -35,49 +94,62 @@ const ModalWithdraw: FC = () => {
       </Button>
 
       <Modal isOpen={isOpen} onClose={handleClose}>
-        <div className='min-w-[285px]'>
+        <form onSubmit={formik.handleSubmit} className='min-w-[285px]'>
           <div className='text-center font-bold text-lg'>
             <FormattedMessage id='withdraw_funds' />
           </div>
-          <div className='flex flex-col gap-2 mt-4'>
-            <div className='inline-flex items-center'>
-              <label
-                className='relative flex items-center p-3 rounded-full cursor-pointer'
-                htmlFor='black'
-              >
-                <input
-                  name='color'
-                  type='radio'
-                  className="before:content[''] peer relative h-5 w-5 cursor-pointer appearance-none rounded-full border border-gray text-gray-900 transition-all before:absolute before:top-2/4 before:left-2/4 before:block before:h-12 before:w-12 before:-translate-y-2/4 before:-translate-x-2/4 before:rounded-full before:bg-gray before:opacity-0 before:transition-opacity checked:border-gray checked:before:bg-gray hover:before:opacity-10"
-                  id='black'
-                />
-                <span className='absolute text-gray-900 transition-opacity opacity-0 pointer-events-none top-2/4 left-2/4 -translate-y-2/4 -translate-x-2/4 peer-checked:opacity-100'>
-                  <RadioIcon />
-                </span>
-              </label>
-            </div>
-            <div className='inline-flex items-center'>
-              <label
-                className='relative flex items-center p-3 rounded-full cursor-pointer'
-                htmlFor='gray'
-              >
-                <input
-                  name='color'
-                  type='radio'
-                  className="before:content[''] peer relative h-5 w-5 cursor-pointer appearance-none rounded-full border border-blue-gray-200 text-gray-900 transition-all before:absolute before:top-2/4 before:left-2/4 before:block before:h-12 before:w-12 before:-translate-y-2/4 before:-translate-x-2/4 before:rounded-full before:bg-blue-gray-500 before:opacity-0 before:transition-opacity checked:border-gray-900 checked:before:bg-gray-900 hover:before:opacity-10"
-                  id='gray'
-                />
-                <span className='absolute text-gray-900 transition-opacity opacity-0 pointer-events-none top-2/4 left-2/4 -translate-y-2/4 -translate-x-2/4 peer-checked:opacity-100'>
-                  <RadioIcon />
-                </span>
-              </label>
-            </div>
+          <div className='flex mt-5 justify-center'>
+            <Button
+              onClick={() => handleSelectType(0)}
+              className={`text-xs border !rounded-none border-purple !rounded-l-xl ${isActive(
+                0,
+              )}`}
+            >
+              CARD
+            </Button>
+            <Button
+              onClick={() => handleSelectType(1)}
+              className={`text-xs border !rounded-none border-purple !rounded-r-xl ${isActive(
+                1,
+              )}`}
+            >
+              USDT
+            </Button>
           </div>
           <div className='flex flex-col gap-2 mt-4'>
-            <Input placeholder={placeholderDetails} label={labelDetails} />
-            <Input placeholder={placeholderAmount} label={labelAmount} />
+            <div className='relative'>
+              <Input
+                placeholder={placeholderDetails}
+                label={labelDetails}
+                className={
+                  formik.touched.amount && formik.errors.amount ? 'border-red' : ''
+                }
+                {...formik.getFieldProps('amount')}
+              />
+              {formik.touched.amount && formik.errors.amount ? (
+                <div className='text-red text-[10px] absolute -bottom-3'>
+                  {formik.errors.amount}
+                </div>
+              ) : null}
+            </div>
+
+            <div className='relative'>
+              <Input
+                placeholder={placeholderAmount}
+                label={labelAmount}
+                className={
+                  formik.touched.details && formik.errors.details ? 'border-red' : ''
+                }
+                {...formik.getFieldProps('details')}
+              />
+              {formik.touched.details && formik.errors.details ? (
+                <div className='text-red text-[10px] absolute -bottom-3'>
+                  {formik.errors.details}
+                </div>
+              ) : null}
+            </div>
           </div>
-          <div className='flex flex-col gap-2 mt-4'>
+          <div className='flex flex-col gap-2 mt-5'>
             <Button type='submit' className='bg-primary-100 w-full rounded-[4px]'>
               <FormattedMessage id='submit' />
             </Button>
@@ -89,7 +161,7 @@ const ModalWithdraw: FC = () => {
               <FormattedMessage id='close' />
             </Button>
           </div>
-        </div>
+        </form>
       </Modal>
     </>
   );

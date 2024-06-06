@@ -17,11 +17,13 @@
     "@tma.js/sdk-react": "^2.2.2",
     "axios": "^1.7.2",
     "d3": "^7.9.0",
+    "formik": "^2.4.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-intl": "^6.6.8",
     "react-spinners": "^0.13.8",
-    "react-transition-group": "^4.4.5"
+    "react-transition-group": "^4.4.5",
+    "yup": "^1.4.0"
   },
   "devDependencies": {
     "@types/d3": "^7.4.3",

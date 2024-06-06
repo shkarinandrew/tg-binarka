@@ -22,7 +22,7 @@ const Balance: FC<IBalance> = ({ value, isWin }) => {
           </span>
         )}
       </div>
-      <ModalWithdraw />
+      <ModalWithdraw balance={value} />
     </div>
   );
 };
