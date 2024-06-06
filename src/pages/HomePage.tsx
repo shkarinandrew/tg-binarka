@@ -11,6 +11,7 @@ import Time from '../components/Time';
 import { ChannelContext } from '../context/ChannelContext';
 import { SubscribeModalContext } from '../context/SubscribeModalContext';
 import { getBalance } from '../services/getBalance';
+import { getWins } from '../services/getWins';
 import { updateBalance } from '../services/updateBalance';
 import { updateIncreaseWins } from '../services/updateIncreaseWins';
 import { getRandom } from '../utils/getRandom';
@@ -66,10 +67,8 @@ const HomePage: FC = () => {
       setBalance((prev) => prev + countWinOrLose);
 
       updateBalance(userId || 0, countWinOrLose);
-      updateIncreaseWins(userId || 0).then((res) => {
-        if (!res) return;
-
-        contextSubscribe?.setIsOpen(res);
+      updateIncreaseWins(userId || 0).then(() => {
+        getWins(userId || 0).then((res) => contextSubscribe?.setIsOpen(res));
       });
     },
     [userId],
