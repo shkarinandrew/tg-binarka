@@ -1,10 +1,26 @@
 export const LOCALES = {
   en: {
-    value: 'en-US',
-    label: '🇬🇧 En',
+    value: 'en',
+    label: 'En',
   },
   ru: {
-    value: 'ru-RU',
-    label: '🇷🇺 Ru',
+    value: 'ru',
+    label: 'Ru',
+  },
+  ger: {
+    value: 'ger',
+    label: 'Ger',
+  },
+  ita: {
+    value: 'ita',
+    label: 'Ita',
+  },
+  fra: {
+    value: 'fra',
+    label: 'Fra',
+  },
+  esp: {
+    value: 'esp',
+    label: 'Esp',
   },
 };

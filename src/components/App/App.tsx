@@ -8,11 +8,12 @@ import { LOCALES } from '../../i18n/locales';
 import { messages } from '../../i18n/messages';
 import { Channel } from '../../interface/Channel.interface';
 import HomePage from '../../pages/HomePage';
+import { findBotUsername } from '../../utils/findBotUsername';
 import ModalSubscribe from '../ModalSubscribe';
 
 const App: FC = () => {
-  const urlParams = new URLSearchParams(window.location.search);
-  const botUsername = urlParams.get('bot_username') || 'binarkagogogo_bot';
+  // TODO: убрать мок
+  const botUsername = findBotUsername() || 'binarkagogogo_bot';
 
   const { loading, data: channel } = useAxios<Channel>(
     `https://gw.dev.slaver.vip/webapp/credentials/${botUsername}`,
@@ -31,7 +32,7 @@ const App: FC = () => {
       <IntlProvider
         messages={messages[LOCALES[channel?.geo || 'en'].value]}
         locale={LOCALES[channel?.geo || 'en'].value}
-        defaultLocale={LOCALES[channel?.geo || 'en'].value}
+        defaultLocale={LOCALES.en.value}
       >
         <HomePage />
         {channel && (
