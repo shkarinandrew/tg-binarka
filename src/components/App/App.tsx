@@ -34,10 +34,10 @@ const App: FC = () => {
   );
 
   useEffect(() => {
-    if (!subscribe?.is_subscribed) return;
+    if (!subscribeLoading && subscribe?.is_subscribed) return;
 
     setIsOpen(true);
-  }, [subscribe?.is_subscribed]);
+  }, [subscribe?.is_subscribed, subscribeLoading]);
 
   const handleClose = () => {
     setIsOpen(false);
