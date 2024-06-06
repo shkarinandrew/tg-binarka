@@ -1,5 +1,5 @@
 import { useInitData, useViewport } from '@tma.js/sdk-react';
-import { FC, useContext, useEffect, useState } from 'react';
+import { FC, useCallback, useContext, useEffect, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 
 import CupIcon from '../assets/icons/cup.svg';
@@ -10,6 +10,7 @@ import Header from '../components/Header';
 import Time from '../components/Time';
 import { ChannelContext } from '../context/ChannelContext';
 import { getBalance } from '../services/getBalance';
+import { updateBalance } from '../services/updateBalance';
 import { getRandom } from '../utils/getRandom';
 
 const { VITE_TIME_SECOND } = import.meta.env;
@@ -22,6 +23,8 @@ const HomePage: FC = () => {
   const initData = useInitData();
   const viewport = useViewport();
 
+  const userId = initData?.user?.id;
+
   const [data, setData] = useState<number[]>([getRandom(64980, 65040)]);
   const [time, setTime] = useState(VITE_TIME_SECOND | 5);
   const [start, setStart] = useState(0);
@@ -32,13 +35,8 @@ const HomePage: FC = () => {
   const [balance, setBalance] = useState(0);
 
   useEffect(() => {
-    const userId = initData?.user?.id;
-    const blc = setInterval(() => {
-      getBalance(userId || 0).then((res) => setBalance(res.balance));
-    }, 1_000);
-
-    return () => clearInterval(blc);
-  }, []);
+    getBalance(userId || 0).then((res) => setBalance(res.balance));
+  }, [userId, balance]);
 
   const count = data.at(-1) || 0;
 
@@ -56,6 +54,23 @@ const HomePage: FC = () => {
     setType(toggle);
   };
 
+  const winOrLoseUpdate = useCallback(
+    (toggle: boolean) => {
+      setIsWin(toggle);
+
+      setBalance((prev) => {
+        if (!toggle) {
+          return prev - 10;
+        }
+
+        return prev + 10;
+      });
+
+      updateBalance(userId || 0, balance);
+    },
+    [userId, balance],
+  );
+
   useEffect(() => {
     if (!disabled) return;
 
@@ -65,19 +80,19 @@ const HomePage: FC = () => {
       setEnd(count);
 
       if (type === 'up' && count > start) {
-        return setIsWin(true);
+        return winOrLoseUpdate(true);
       }
 
       if (type === 'up' && count <= start) {
-        return setIsWin(false);
+        return winOrLoseUpdate(false);
       }
 
       if (type === 'down' && count <= start) {
-        return setIsWin(true);
+        return winOrLoseUpdate(true);
       }
 
       if (type === 'down' && count > start) {
-        return setIsWin(false);
+        return winOrLoseUpdate(false);
       }
 
       return;
@@ -88,7 +103,7 @@ const HomePage: FC = () => {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [time, disabled, count]);
+  }, [time, disabled, count, winOrLoseUpdate]);
 
   useEffect(() => {
     const interval = setInterval(() => {
