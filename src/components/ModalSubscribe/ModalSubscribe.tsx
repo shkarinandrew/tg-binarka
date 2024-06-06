@@ -1,22 +1,26 @@
-import { FC, useState } from 'react';
+import { useUtils } from '@tma.js/sdk-react';
+import { FC, useContext, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 
+import { ChannelContext } from '../../context/ChannelContext';
 import Button from '../Button';
 import Modal from '../Modal';
-
-interface IModalSubscribe {
-  channelName: string;
-  channelSrc: string;
-}
+import { IModalSubscribe } from './ModalSubscribe.interface';
 
 const ModalSubscribe: FC<IModalSubscribe> = ({ channelName, channelSrc }) => {
+  const context = useContext(ChannelContext);
   const [isOpen, setIsOpen] = useState(true);
+
+  const utils = useUtils();
+
+  const handleSubscribe = () => {
+    if (!context?.invite_link) return;
+
+    utils.openTelegramLink(context.invite_link);
+  };
 
   const handleClose = () => {
     setIsOpen(false);
-  };
-  const handleOpen = () => {
-    setIsOpen(true);
   };
 
   return (
@@ -35,7 +39,10 @@ const ModalSubscribe: FC<IModalSubscribe> = ({ channelName, channelSrc }) => {
         <div className='text-gray font-medium text-sm text-center'>
           <FormattedMessage id='subscribe_context' />
         </div>
-        <Button className='text-base font-medium uppercase mt-5 bg-gradient-to-r from-[#FF739D] via-purple to-primary-100 px-14 py-3'>
+        <Button
+          onClick={handleSubscribe}
+          className='text-base font-medium uppercase mt-5 bg-gradient-to-r from-[#FF739D] via-purple to-primary-100 px-14 py-3'
+        >
           <FormattedMessage id='subscribe_btn' />
         </Button>
       </div>

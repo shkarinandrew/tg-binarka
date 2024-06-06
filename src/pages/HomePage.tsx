@@ -13,7 +13,7 @@ import { getBalance } from '../services/getBalance';
 import { updateBalance } from '../services/updateBalance';
 import { getRandom } from '../utils/getRandom';
 
-const { VITE_TIME_SECOND } = import.meta.env;
+const { VITE_TIME_SECOND, VITE_COUNT_WIN_OR_LOSE } = import.meta.env;
 
 type ButtonToggleType = 'up' | 'down';
 
@@ -57,7 +57,7 @@ const HomePage: FC = () => {
 
   const winOrLoseUpdate = useCallback(
     (toggle: boolean) => {
-      const countWinOrLose = toggle ? 10 : -10;
+      const countWinOrLose = toggle ? VITE_COUNT_WIN_OR_LOSE : -VITE_COUNT_WIN_OR_LOSE;
 
       setIsWin(toggle);
       setBalance((prev) => prev + countWinOrLose);
@@ -136,7 +136,7 @@ const HomePage: FC = () => {
         >
           <FormattedMessage id='subscription_btn' />
         </Button>
-        <Balance value={balance} />
+        <Balance value={balance} isWin={isWin} />
         <div className='flex items-center gap-[10px] w-full'>
           <Button
             disabled={disabled}
@@ -144,7 +144,7 @@ const HomePage: FC = () => {
             className='bg-green w-full overflow-hidden text-sm !text-black relative font-semibold py-[9px] rounded-[10px] shadow-btn-green uppercase disabled:bg-green/50 disabled:cursor-not-allowed before:content-[""] before:w-[100px] before:h-[100px] before:bg-[#20FF80] before:z-0 before:absolute before:rotate-45 before:top-[25px] before:rounded-md disabled:before:bg-[#20FF80]/30'
           >
             <div className='z-10'>
-              $10 <FormattedMessage id='up_btn' />
+              ${VITE_COUNT_WIN_OR_LOSE} <FormattedMessage id='up_btn' />
             </div>
           </Button>
           <Button
@@ -153,7 +153,7 @@ const HomePage: FC = () => {
             className='bg-red w-full overflow-hidden text-sm font-semibold py-[9px] relative rounded-[10px] shadow-btn-red uppercase disabled:bg-red/50 disabled:cursor-not-allowed before:content-[""] before:w-[100px] before:h-[100px] before:bg-[#E75085] before:z-0 before:absolute before:rotate-45 before:bottom-[25px] before:rounded-md disabled:before:bg-[#E75085]/30'
           >
             <div className='z-10'>
-              $10 <FormattedMessage id='down_btn' />
+              ${VITE_COUNT_WIN_OR_LOSE} <FormattedMessage id='down_btn' />
             </div>
           </Button>
         </div>
