@@ -1,16 +1,22 @@
-import { FC, useContext, useEffect, useState } from 'react';
+import { useInitData } from '@tma.js/sdk-react';
+import { FC, useEffect, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 
 import GrammerlyIcon from '../../assets/icons/grammerly.svg';
 import InformationIcon from '../../assets/icons/information.svg';
-import { ChannelContext } from '../../context/ChannelContext';
+import { getNeedHelp } from '../../services/getNeedHelp';
+import { findBotUsername } from '../../utils/findBotUsername';
 import { getRandom } from '../../utils/getRandom';
 
 const randomUsers = getRandom(250, 270);
 
 const Header: FC = () => {
   const [online, setOnline] = useState(randomUsers);
-  const context = useContext(ChannelContext);
+
+  // TODO: убрать мок
+  const botUsername = findBotUsername() || 'binarkagogogo_bot';
+
+  const initData = useInitData();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -20,7 +26,8 @@ const Header: FC = () => {
   }, []);
 
   const handleClick = () => {
-    console.log(context?.invite_link);
+    const userId = initData?.user?.id.toString();
+    getNeedHelp(userId || '', botUsername);
   };
 
   return (
