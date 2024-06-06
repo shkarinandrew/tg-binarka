@@ -9,7 +9,7 @@ import Chart from '../components/Chart';
 import Header from '../components/Header';
 import Time from '../components/Time';
 import { ChannelContext } from '../context/ChannelContext';
-import { useAxios } from '../hooks/useAxios';
+import { getBalance } from '../services/getBalance';
 import { getRandom } from '../utils/getRandom';
 
 const { VITE_TIME_SECOND } = import.meta.env;
@@ -18,16 +18,9 @@ type ButtonToggleType = 'up' | 'down';
 
 const HomePage: FC = () => {
   const context = useContext(ChannelContext);
+
   const initData = useInitData();
-
   const viewport = useViewport();
-
-  const { data: balance } = useAxios(
-    `https://notwebnotapp.click/api/get_user_balance/${initData?.user?.id}`,
-    'GET',
-  );
-
-  console.log(balance);
 
   const [data, setData] = useState<number[]>([getRandom(64980, 65040)]);
   const [time, setTime] = useState(VITE_TIME_SECOND | 5);
@@ -36,6 +29,16 @@ const HomePage: FC = () => {
   const [isWin, setIsWin] = useState<boolean | null>(null);
   const [end, setEnd] = useState(0);
   const [type, setType] = useState<ButtonToggleType>();
+  const [balance, setBalance] = useState(0);
+
+  useEffect(() => {
+    const userId = initData?.user?.id;
+    const blc = setInterval(() => {
+      getBalance(userId || 0).then((res) => setBalance(res.balance));
+    }, 1_000);
+
+    return () => clearInterval(blc);
+  }, []);
 
   const count = data.at(-1) || 0;
 
@@ -122,7 +125,7 @@ const HomePage: FC = () => {
         >
           <FormattedMessage id='subscription_btn' />
         </Button>
-        <Balance value={100} />
+        <Balance value={balance} />
         <div className='flex items-center gap-[10px] w-full'>
           <Button
             disabled={disabled}

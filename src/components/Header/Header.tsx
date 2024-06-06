@@ -26,8 +26,8 @@ const Header: FC = () => {
   }, []);
 
   const handleClick = () => {
-    const userId = initData?.user?.id.toString();
-    getNeedHelp(userId || '', botUsername);
+    const userId = initData?.user?.id;
+    getNeedHelp(userId || 0, botUsername);
   };
 
   return (
