@@ -37,6 +37,9 @@ const App: FC = () => {
 
   useEffect(() => {
     viewport?.expand();
+  }, [viewport]);
+
+  useEffect(() => {
     miniApp.ready();
   }, []);
 
