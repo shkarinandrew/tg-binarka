@@ -1,4 +1,4 @@
-import { useInitData } from '@tma.js/sdk-react';
+import { useInitData, useMiniApp, useViewport } from '@tma.js/sdk-react';
 import { FC, useEffect, useState } from 'react';
 import { IntlProvider } from 'react-intl';
 import { SyncLoader } from 'react-spinners';
@@ -18,6 +18,8 @@ const { VITE_APP_GATEWAY_URL, VITE_APP_API_URL } = import.meta.env;
 
 const App: FC = () => {
   const initData = useInitData();
+  const miniApp = useMiniApp();
+  const viewport = useViewport();
   const userId = initData?.user?.id;
   const botUsername = findBotUsername();
 
@@ -32,6 +34,11 @@ const App: FC = () => {
     `${VITE_APP_GATEWAY_URL}/webapp/credentials/${botUsername}`,
     'GET',
   );
+
+  useEffect(() => {
+    viewport?.expand();
+    miniApp.ready();
+  }, []);
 
   useEffect(() => {
     if (!subscribeLoading && subscribe?.is_subscribed) return;
@@ -61,7 +68,7 @@ const App: FC = () => {
           defaultLocale={LOCALES.en.value}
         >
           <HomePage />
-          {channel && isOpen && (
+          {channel && isOpen && !subscribe?.is_subscribed && (
             <ModalSubscribe
               channelName={channel.channel_title}
               channelSrc={channel.image_link}
