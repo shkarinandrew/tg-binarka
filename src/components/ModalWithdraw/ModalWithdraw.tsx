@@ -57,7 +57,7 @@ const ModalWithdraw: FC<IModalWithdraw> = ({ balance, setBalance }) => {
     validationSchema,
     onSubmit: (values) => {
       const details = parseInt(values.details, 10);
-      withdrawBalance(userId || 0, details, botUsername || '').then(
+      withdrawBalance(userId || 0, -details, botUsername || '').then(
         ({ new_balance, message }) => {
           setBalance(new_balance);
           handleClose();
