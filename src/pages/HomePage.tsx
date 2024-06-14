@@ -14,6 +14,7 @@ import { getBalance } from '../services/getBalance';
 import { getWins } from '../services/getWins';
 import { updateBalance } from '../services/updateBalance';
 import { updateIncreaseWins } from '../services/updateIncreaseWins';
+import { findBotUsername } from '../utils/findBotUsername';
 import { getRandom } from '../utils/getRandom';
 
 const { VITE_TIME_SECOND, VITE_COUNT_WIN_OR_LOSE } = import.meta.env;
@@ -39,9 +40,11 @@ const HomePage: FC = () => {
   const [type, setType] = useState<ButtonToggleType>();
   const [balance, setBalance] = useState(0);
 
+  const botUsername = findBotUsername();
+
   useEffect(() => {
-    getBalance(userId || 0).then((res) => setBalance(res.balance));
-  }, [userId, balance]);
+    getBalance(userId || 0, botUsername || '').then((res) => setBalance(res.balance));
+  }, [userId, balance, botUsername]);
 
   const count = data.at(-1) || 0;
 
@@ -66,18 +69,18 @@ const HomePage: FC = () => {
       setIsWin(toggle);
       setBalance((prev) => prev + countWinOrLose);
 
-      updateBalance(userId || 0, countWinOrLose);
+      updateBalance(userId || 0, countWinOrLose, botUsername || '');
       updateIncreaseWins(userId || 0).then(() => {
         if (contextSubscribe?.isSubscribed) return;
 
-        getWins(userId || 0).then(({ wins }) => {
+        getWins(userId || 0, botUsername || '').then(({ wins }) => {
           if (wins < 4) return;
           contextSubscribe?.setIsOpen(!!wins);
           contextSubscribe?.isSubscribed;
         });
       });
     },
-    [userId],
+    [userId, botUsername],
   );
 
   useEffect(() => {
