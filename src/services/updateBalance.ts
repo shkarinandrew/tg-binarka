@@ -8,7 +8,7 @@ export const updateBalance = async (
   botUsername: string,
 ) => {
   const res = await axios.post(
-    `${VITE_APP_API_URL}/update_balance/${userId}/${amount}?botUsername=${botUsername}`,
+    `${VITE_APP_API_URL}/update_balance/${userId}/${amount}?bot_username=${botUsername}`,
   );
   const data = res.data;
 
