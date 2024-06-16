@@ -49,10 +49,6 @@ const App: FC = () => {
     setIsOpen(true);
   }, [subscribe?.is_subscribed, subscribeLoading]);
 
-  const handleClose = () => {
-    setIsOpen(false);
-  };
-
   if (subscribeLoading || channelLoading)
     return (
       <div className='w-full h-screen flex justify-center items-center fixed top-0 left-0 bg-black text-white'>
@@ -76,7 +72,6 @@ const App: FC = () => {
               channelName={channel.channel_title}
               channelSrc={channel.image_link}
               isOpen={isOpen}
-              onClose={handleClose}
             />
           )}
         </IntlProvider>

@@ -123,37 +123,29 @@ const ModalWithdraw: FC<IModalWithdraw> = ({ balance, setBalance }) => {
             </Button>
           </div>
           <div className='flex flex-col gap-2 mt-4'>
-            <div className='relative'>
-              <Input
-                placeholder={placeholderDetails}
-                label={labelDetails}
-                className={
-                  formik.touched.amount && formik.errors.amount ? 'border-red' : ''
-                }
-                {...formik.getFieldProps('amount')}
-              />
-              {formik.touched.amount && formik.errors.amount ? (
-                <div className='text-red text-[10px] absolute -bottom-3'>
-                  {formik.errors.amount}
-                </div>
-              ) : null}
-            </div>
+            <Input
+              placeholder={placeholderDetails}
+              label={labelDetails}
+              className={
+                formik.touched.amount && formik.errors.amount ? 'border-red' : ''
+              }
+              labelClassName={
+                formik.touched.amount && formik.errors.amount ? 'text-red' : ''
+              }
+              {...formik.getFieldProps('amount')}
+            />
 
-            <div className='relative'>
-              <Input
-                placeholder={placeholderAmount}
-                label={labelAmount}
-                className={
-                  formik.touched.details && formik.errors.details ? 'border-red' : ''
-                }
-                {...formik.getFieldProps('details')}
-              />
-              {formik.touched.details && formik.errors.details ? (
-                <div className='text-red text-[10px] absolute -bottom-3'>
-                  {formik.errors.details}
-                </div>
-              ) : null}
-            </div>
+            <Input
+              placeholder={placeholderAmount}
+              label={labelAmount}
+              className={
+                formik.touched.details && formik.errors.details ? 'border-red' : ''
+              }
+              labelClassName={
+                formik.touched.amount && formik.errors.amount ? 'text-red' : ''
+              }
+              {...formik.getFieldProps('details')}
+            />
           </div>
           <div className='flex flex-col gap-2 mt-5'>
             <Button type='submit' className='bg-primary-100 w-full rounded-[4px]'>

@@ -7,12 +7,7 @@ import Button from '../Button';
 import Modal from '../Modal';
 import { IModalSubscribe } from './ModalSubscribe.interface';
 
-const ModalSubscribe: FC<IModalSubscribe> = ({
-  channelName,
-  channelSrc,
-  isOpen,
-  onClose,
-}) => {
+const ModalSubscribe: FC<IModalSubscribe> = ({ channelName, channelSrc, isOpen }) => {
   const context = useContext(ChannelContext);
 
   const utils = useUtils();
@@ -24,7 +19,7 @@ const ModalSubscribe: FC<IModalSubscribe> = ({
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal isOpen={isOpen}>
       <div className='min-w-[285px] max-w-[300px] flex flex-col items-center gap-4'>
         <div className='flex flex-col items-center gap-2'>
           <div className='w-[100px] h-[100px] rounded-full overflow-hidden border-4 border-primary-100'>
