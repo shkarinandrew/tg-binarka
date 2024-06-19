@@ -38,8 +38,8 @@ const LineChart: FC<LineChartProps> = ({ width, height, data, start, end, isWin 
   const lineBuilder = d3
     .line<number>()
     .x((_, i) => xScale(i))
-    .y((d) => yScale(d))
-    .curve(d3.curveBasis);
+    .y((d) => yScale(d));
+  // .curve(d3.curveBasis);
 
   const linePath = lineBuilder(data);
 
