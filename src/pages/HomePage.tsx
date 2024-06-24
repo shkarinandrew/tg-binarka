@@ -20,7 +20,8 @@ import { getRandom } from '../utils/getRandom';
 type ButtonToggleType = 'up' | 'down';
 
 const { VITE_TIME_SECOND, VITE_COUNT_WIN_OR_LOSE } = import.meta.env;
-const defaultCount = parseInt(VITE_COUNT_WIN_OR_LOSE, 10);
+const defaultCount = parseInt(VITE_COUNT_WIN_OR_LOSE, 10) || 10;
+const defaultTime = parseInt(VITE_TIME_SECOND, 10) || 5;
 const defaultData = Array.from({ length: 15 }, () => getRandom(64980, 65040));
 
 const HomePage: FC = () => {
@@ -34,7 +35,7 @@ const HomePage: FC = () => {
   const userId = initData?.user?.id;
 
   const [data, setData] = useState<number[]>(defaultData);
-  const [time, setTime] = useState(VITE_TIME_SECOND | 5);
+  const [time, setTime] = useState<number>(defaultTime);
   const [start, setStart] = useState(0);
   const [disabled, setDisabled] = useState(false);
   const [isWin, setIsWin] = useState<boolean | null>(null);
@@ -82,34 +83,24 @@ const HomePage: FC = () => {
         });
       });
     },
-    [userId, botUsername],
+    [userId, botUsername, contextSubscribe?.isSubscribed],
   );
 
   useEffect(() => {
     if (!disabled) return;
 
     if (time < 0) {
-      setTime(VITE_TIME_SECOND);
+      setTime(defaultTime);
       setDisabled(false);
       setEnd(count);
 
-      if (type === 'up' && count > start) {
+      if ((type === 'up' && count > start) || (type === 'down' && count <= start)) {
         return winOrLoseUpdate(true);
       }
 
-      if (type === 'up' && count <= start) {
+      if ((type === 'up' && count <= start) || (type === 'down' && count > start)) {
         return winOrLoseUpdate(false);
       }
-
-      if (type === 'down' && count <= start) {
-        return winOrLoseUpdate(true);
-      }
-
-      if (type === 'down' && count > start) {
-        return winOrLoseUpdate(false);
-      }
-
-      return;
     }
 
     const interval = setInterval(() => {
@@ -117,14 +108,16 @@ const HomePage: FC = () => {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [time, disabled, count, winOrLoseUpdate]);
+  }, [disabled, time, winOrLoseUpdate]);
 
   useEffect(() => {
     const interval = setInterval(() => {
       const generateDataItem = getRandom(64980, 65040);
 
       setData((prev) => {
-        prev.shift();
+        if (prev.length >= 15) {
+          prev.shift();
+        }
         return [...prev, generateDataItem];
       });
     }, 1_000);
