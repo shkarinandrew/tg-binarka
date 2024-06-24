@@ -123,6 +123,7 @@ const ModalWithdraw: FC<IModalWithdraw> = ({ balance, setBalance, isDisabled }) 
           </div>
           <div className='flex mt-5 justify-center'>
             <Button
+              type='button'
               onClick={() => handleSelectType(0)}
               className={`text-xs border !rounded-none border-purple !rounded-l-xl ${isActive(
                 0,
@@ -131,6 +132,7 @@ const ModalWithdraw: FC<IModalWithdraw> = ({ balance, setBalance, isDisabled }) 
               CARD
             </Button>
             <Button
+              type='button'
               onClick={() => handleSelectType(1)}
               className={`text-xs border !rounded-none border-purple !rounded-r-xl ${isActive(
                 1,
