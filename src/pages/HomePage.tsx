@@ -111,7 +111,7 @@ const HomePage: FC = () => {
     return () => clearInterval(interval);
   }, [disabled, time, winOrLoseUpdate]);
 
-  const generateNextItem = useCallback((number: number[]) => {
+  const generateNextItem = useCallback((number: number[]): number => {
     const generateDataItem = getRandom(1, 10);
     const sign = generateRandomSign();
 
