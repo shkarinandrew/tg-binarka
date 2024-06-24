@@ -1,8 +1,8 @@
-import { useInitData, useMiniApp, useViewport } from '@tma.js/sdk-react';
 import { FC, useEffect, useState } from 'react';
 import { IntlProvider } from 'react-intl';
 import { SyncLoader } from 'react-spinners';
 
+import { useInitData, useMiniApp, useViewport } from '@tma.js/sdk-react';
 import { ChannelContext } from '../../context/ChannelContext';
 import { SubscribeModalContext } from '../../context/SubscribeModalContext';
 import { useAxios } from '../../hooks/useAxios';

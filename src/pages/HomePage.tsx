@@ -129,6 +129,7 @@ const HomePage: FC = () => {
       className='w-full bg-[#1C1C1D] px-4 pt-5 pb-10 flex flex-col justify-between gap-5 overflow-y-auto'
       style={{
         height: viewport?.stableHeight || '100vh',
+        overscrollBehavior: 'none',
       }}
     >
       <div className='flex flex-col gap-[10px]'>
