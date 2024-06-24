@@ -22,7 +22,7 @@ type ButtonToggleType = 'up' | 'down';
 const { VITE_TIME_SECOND, VITE_COUNT_WIN_OR_LOSE } = import.meta.env;
 const defaultCount = parseInt(VITE_COUNT_WIN_OR_LOSE, 10) || 10;
 const defaultTime = parseInt(VITE_TIME_SECOND, 10) || 5;
-const defaultData = Array.from({ length: 15 }, () => getRandom(64980, 65040));
+const defaultData = Array.from({ length: 15 }, () => getRandom(64980, 65029));
 
 const HomePage: FC = () => {
   const context = useContext(ChannelContext);

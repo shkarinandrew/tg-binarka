@@ -11,7 +11,7 @@ const LineChart: FC<LineChartProps> = ({ width, height, data, start, end, isWin 
   const boundsHeight = height - MARGIN.top * 2;
 
   const yScale = useMemo(() => {
-    return d3.scaleLinear().domain([64980, 65040]).range([boundsHeight, 0]);
+    return d3.scaleLinear().domain([64980, 65029]).range([boundsHeight, 0]);
   }, [data, height]);
 
   const xScale = useMemo(() => {
