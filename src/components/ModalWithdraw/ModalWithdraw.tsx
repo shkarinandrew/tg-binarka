@@ -153,7 +153,7 @@ const ModalWithdraw: FC<IModalWithdraw> = ({ balance, setBalance, isDisabled }) 
                 formik.touched.details && formik.errors.details ? 'border-red' : ''
               }
               labelClassName={
-                formik.touched.amount && formik.errors.amount ? 'text-red' : ''
+                formik.touched.details && formik.errors.details ? 'text-red' : ''
               }
               {...formik.getFieldProps('details')}
             />
