@@ -30,7 +30,10 @@ const ModalWithdraw: FC<IModalWithdraw> = ({ balance, setBalance, isDisabled }) 
   };
 
   const validationSchema = Yup.object({
-    amount: Yup.string().trim().required('Введите номер карты или счета'),
+    amount: Yup.string()
+      .trim()
+      .min(8, 'Длина номера должна быть больше 8 символов')
+      .required('Введите номер карты или счета'),
     details: Yup.string()
       .trim()
       .matches(/^\d+$/, 'Поле должно содержать только цифры')
