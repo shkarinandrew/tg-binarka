@@ -143,7 +143,7 @@ const HomePage: FC = () => {
     <div
       className='w-full bg-[#1C1C1D] px-4 pt-5 pb-10 flex flex-col justify-between gap-5 overflow-y-auto'
       style={{
-        height: viewport?.stableHeight || '100svh',
+        minHeight: viewport?.stableHeight || '100vh',
         overscrollBehavior: 'none',
       }}
     >
