@@ -8,6 +8,7 @@ import Button from '../components/Button';
 import Chart from '../components/Chart';
 import Header from '../components/Header';
 import Time from '../components/Time';
+import { END_RANDOM, START_RANDOM } from '../config';
 import { ChannelContext } from '../context/ChannelContext';
 import { SubscribeModalContext } from '../context/SubscribeModalContext';
 import { getBalance } from '../services/getBalance';
@@ -15,6 +16,7 @@ import { getWins } from '../services/getWins';
 import { updateBalance } from '../services/updateBalance';
 import { updateIncreaseWins } from '../services/updateIncreaseWins';
 import { findBotUsername } from '../utils/findBotUsername';
+import { generateRandomSign } from '../utils/generateRandomSign';
 import { getRandom } from '../utils/getRandom';
 
 type ButtonToggleType = 'up' | 'down';
@@ -22,7 +24,6 @@ type ButtonToggleType = 'up' | 'down';
 const { VITE_TIME_SECOND, VITE_COUNT_WIN_OR_LOSE } = import.meta.env;
 const defaultCount = parseInt(VITE_COUNT_WIN_OR_LOSE, 10) || 10;
 const defaultTime = parseInt(VITE_TIME_SECOND, 10) || 5;
-const defaultData = Array.from({ length: 15 }, () => getRandom(64980, 65029));
 
 const HomePage: FC = () => {
   const context = useContext(ChannelContext);
@@ -34,7 +35,7 @@ const HomePage: FC = () => {
 
   const userId = initData?.user?.id;
 
-  const [data, setData] = useState<number[]>(defaultData);
+  const [data, setData] = useState<number[]>([getRandom(START_RANDOM, END_RANDOM)]);
   const [time, setTime] = useState<number>(defaultTime);
   const [start, setStart] = useState(0);
   const [disabled, setDisabled] = useState(false);
@@ -110,25 +111,39 @@ const HomePage: FC = () => {
     return () => clearInterval(interval);
   }, [disabled, time, winOrLoseUpdate]);
 
+  const generateNextItem = useCallback((number: number[]) => {
+    const generateDataItem = getRandom(1, 10);
+    const sign = generateRandomSign();
+
+    const newDataItem = eval(number.at(-1) + sign + generateDataItem);
+
+    if (newDataItem <= START_RANDOM || newDataItem >= END_RANDOM) {
+      return generateNextItem(number);
+    }
+
+    return newDataItem;
+  }, []);
+
   useEffect(() => {
     const interval = setInterval(() => {
-      const generateDataItem = getRandom(64980, 65040);
-
       setData((prev) => {
         if (prev.length >= 15) {
           prev.shift();
         }
-        return [...prev, generateDataItem];
+
+        const newDataItem = generateNextItem(prev);
+
+        return [...prev, newDataItem];
       });
     }, 1_000);
     return () => clearInterval(interval);
-  }, []);
+  }, [generateNextItem]);
 
   return (
     <div
       className='w-full bg-[#1C1C1D] px-4 pt-5 pb-10 flex flex-col justify-between gap-5 overflow-y-auto'
       style={{
-        height: viewport?.stableHeight || '100vh',
+        height: viewport?.stableHeight || '100svh',
         overscrollBehavior: 'none',
       }}
     >

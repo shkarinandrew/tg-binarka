@@ -1,6 +1,7 @@
 import * as d3 from 'd3';
 import { FC, useEffect, useMemo, useRef } from 'react';
 
+import { END_RANDOM, START_RANDOM } from '../../../config';
 import LineItem from '../LineItem';
 import { MARGIN } from './LineChart.config';
 import { LineChartProps } from './LineChart.interface';
@@ -11,14 +12,11 @@ const LineChart: FC<LineChartProps> = ({ width, height, data, start, end, isWin 
   const boundsHeight = height - MARGIN.top * 2;
 
   const yScale = useMemo(() => {
-    return d3.scaleLinear().domain([64980, 65029]).range([boundsHeight, 0]);
+    return d3.scaleLinear().domain([START_RANDOM, END_RANDOM]).range([boundsHeight, 0]);
   }, [data, height]);
 
   const xScale = useMemo(() => {
-    return d3
-      .scaleLinear()
-      .domain([0, 20])
-      .range([0, width + MARGIN.right]);
+    return d3.scaleLinear().domain([0, 20]).range([0, boundsWidth]);
   }, [data, width]);
 
   // Render the Y axis using d3.js, not react

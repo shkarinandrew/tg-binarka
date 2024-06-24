@@ -72,6 +72,7 @@ const App: FC = () => {
               channelName={channel.channel_title}
               channelSrc={channel.image_link}
               isOpen={isOpen}
+              onClose={() => setIsOpen(false)}
             />
           )}
         </IntlProvider>

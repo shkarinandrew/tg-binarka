@@ -7,13 +7,20 @@ import Button from '../Button';
 import Modal from '../Modal';
 import { IModalSubscribe } from './ModalSubscribe.interface';
 
-const ModalSubscribe: FC<IModalSubscribe> = ({ channelName, channelSrc, isOpen }) => {
+const ModalSubscribe: FC<IModalSubscribe> = ({
+  channelName,
+  channelSrc,
+  isOpen,
+  onClose,
+}) => {
   const context = useContext(ChannelContext);
 
   const utils = useUtils();
 
   const handleSubscribe = () => {
     if (!context?.invite_link) return;
+
+    onClose && onClose();
 
     utils.openTelegramLink(context.invite_link);
   };
