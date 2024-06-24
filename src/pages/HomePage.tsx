@@ -74,7 +74,7 @@ const HomePage: FC = () => {
       setBalance((prev) => prev + countWinOrLose);
 
       updateBalance(userId || 0, countWinOrLose, botUsername || '');
-      updateIncreaseWins(userId || 0).then(() => {
+      updateIncreaseWins(userId || 0, botUsername || '').then(() => {
         if (contextSubscribe?.isSubscribed) return;
 
         getWins(userId || 0, botUsername || '').then(({ wins }) => {
