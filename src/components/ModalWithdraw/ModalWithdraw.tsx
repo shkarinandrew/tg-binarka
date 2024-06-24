@@ -1,9 +1,9 @@
-import { useInitData } from '@tma.js/sdk-react';
 import { useFormik } from 'formik';
 import { FC, useCallback, useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import * as Yup from 'yup';
 
+import { useInitData } from '@tma.js/sdk-react';
 import { withdrawBalance } from '../../services/withdrawBalance';
 import { findBotUsername } from '../../utils/findBotUsername';
 import Button from '../Button';
@@ -11,7 +11,7 @@ import Input from '../Input';
 import Modal from '../Modal';
 import { IModalWithdraw } from './ModalWithdraw.interface';
 
-const ModalWithdraw: FC<IModalWithdraw> = ({ balance, setBalance }) => {
+const ModalWithdraw: FC<IModalWithdraw> = ({ balance, setBalance, isDisabled }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [active, setActive] = useState(0);
 
@@ -95,7 +95,11 @@ const ModalWithdraw: FC<IModalWithdraw> = ({ balance, setBalance }) => {
 
   return (
     <>
-      <Button onClick={handleOpen} className='bg-primary-100 text-xs px-[7px] py-0.5'>
+      <Button
+        disabled={isDisabled}
+        onClick={handleOpen}
+        className='bg-primary-100 text-xs px-[7px] py-0.5 disabled:bg-gray'
+      >
         <FormattedMessage id='withdraw_btn' />
       </Button>
 

@@ -1,7 +1,7 @@
-import { useInitData, useUtils, useViewport } from '@tma.js/sdk-react';
 import { FC, useCallback, useContext, useEffect, useState } from 'react';
-import { FormattedMessage } from 'react-intl';
 
+import { useInitData, useUtils, useViewport } from '@tma.js/sdk-react';
+import { FormattedMessage } from 'react-intl';
 import CupIcon from '../assets/icons/cup.svg';
 import Balance from '../components/Balance';
 import Button from '../components/Button';
@@ -21,6 +21,8 @@ const { VITE_TIME_SECOND, VITE_COUNT_WIN_OR_LOSE } = import.meta.env;
 
 type ButtonToggleType = 'up' | 'down';
 
+const defaultData = Array.from({ length: 15 }, () => getRandom(64980, 65040));
+
 const HomePage: FC = () => {
   const context = useContext(ChannelContext);
   const contextSubscribe = useContext(SubscribeModalContext);
@@ -31,7 +33,7 @@ const HomePage: FC = () => {
 
   const userId = initData?.user?.id;
 
-  const [data, setData] = useState<number[]>([getRandom(64980, 65040)]);
+  const [data, setData] = useState<number[]>(defaultData);
   const [time, setTime] = useState(VITE_TIME_SECOND | 5);
   const [start, setStart] = useState(0);
   const [disabled, setDisabled] = useState(false);
@@ -122,14 +124,12 @@ const HomePage: FC = () => {
       const generateDataItem = getRandom(64980, 65040);
 
       setData((prev) => {
-        if (prev.length >= 20) {
-          prev.shift();
-        }
+        prev.shift();
         return [...prev, generateDataItem];
       });
     }, 1_000);
     return () => clearInterval(interval);
-  }, [data]);
+  }, []);
 
   return (
     <div
@@ -152,7 +152,12 @@ const HomePage: FC = () => {
         >
           <FormattedMessage id='subscription_btn' />
         </Button>
-        <Balance value={balance} isWin={isWin} setBalance={setBalance} />
+        <Balance
+          isDisabled={disabled}
+          value={balance}
+          isWin={isWin}
+          setBalance={setBalance}
+        />
         <div className='flex items-center gap-[10px] w-full'>
           <Button
             disabled={disabled}
