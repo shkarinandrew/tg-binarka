@@ -21,7 +21,7 @@ const LineChart: FC<LineChartProps> = ({ width, height, data, start, end, isWin 
       .range([0, width + MARGIN.right]);
   }, [data, width]);
 
-  // Render the X and Y axis using d3.js, not react
+  // Render the Y axis using d3.js, not react
   useEffect(() => {
     const svgElement = d3.select(axesRef.current);
     svgElement.selectAll('*').remove();
@@ -33,7 +33,7 @@ const LineChart: FC<LineChartProps> = ({ width, height, data, start, end, isWin 
       .tickFormat((d) => d.toString());
 
     svgElement.append('g').call(yAxisGenerator);
-  }, [yScale, boundsHeight]);
+  }, []);
 
   const lineBuilder = d3
     .line<number>()
@@ -67,7 +67,7 @@ const LineChart: FC<LineChartProps> = ({ width, height, data, start, end, isWin 
       <svg width={width} height={height} className={`bg-gradient-to-b ${colorIsWin}`}>
         {/* first group is lines */}
         <g
-          width={width}
+          width={boundsWidth}
           height={boundsHeight}
           transform={`translate(${[0, MARGIN.top].join(',')})`}
         >
@@ -82,7 +82,7 @@ const LineChart: FC<LineChartProps> = ({ width, height, data, start, end, isWin 
         />
         {/* support line start */}
         <g
-          width={width}
+          width={boundsWidth}
           height={boundsHeight}
           transform={`translate(${[0, MARGIN.top].join(',')})`}
         >
@@ -90,7 +90,7 @@ const LineChart: FC<LineChartProps> = ({ width, height, data, start, end, isWin 
         </g>
         {/* support line is win */}
         <g
-          width={width}
+          width={boundsWidth}
           height={boundsHeight}
           transform={`translate(${[0, MARGIN.top].join(',')})`}
         >
