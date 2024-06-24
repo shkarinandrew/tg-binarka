@@ -11,6 +11,7 @@ import { messages } from '../../i18n/messages';
 import { Channel } from '../../interface/Channel.interface';
 import { Subscription } from '../../interface/Subsription.interface';
 import HomePage from '../../pages/HomePage';
+import { getWins } from '../../services/getWins';
 import { findBotUsername } from '../../utils/findBotUsername';
 import ModalSubscribe from '../ModalSubscribe';
 
@@ -44,10 +45,13 @@ const App: FC = () => {
   }, []);
 
   useEffect(() => {
-    if (!subscribeLoading && subscribe?.is_subscribed) return;
+    if (!subscribeLoading && subscribe) return;
 
-    setIsOpen(true);
-  }, [subscribe?.is_subscribed, subscribeLoading]);
+    getWins(userId || 0, botUsername || '').then(({ wins }) => {
+      if (wins < 4) return;
+      setIsOpen(true);
+    });
+  }, [subscribe, subscribeLoading, userId, botUsername]);
 
   if (subscribeLoading || channelLoading)
     return (
@@ -67,7 +71,7 @@ const App: FC = () => {
           defaultLocale={LOCALES.en.value}
         >
           <HomePage />
-          {channel && isOpen && !subscribe?.is_subscribed && (
+          {channel && !subscribe?.is_subscribed && (
             <ModalSubscribe
               channelName={channel.channel_title}
               channelSrc={channel.image_link}

@@ -79,8 +79,7 @@ const HomePage: FC = () => {
 
         getWins(userId || 0, botUsername || '').then(({ wins }) => {
           if (wins < 4) return;
-          contextSubscribe?.setIsOpen(!!wins);
-          contextSubscribe?.isSubscribed;
+          contextSubscribe?.setIsOpen(true);
         });
       });
     },
