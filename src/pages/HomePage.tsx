@@ -115,7 +115,7 @@ const HomePage: FC = () => {
     const generateDataItem = getRandom(1, 10);
     const sign = generateRandomSign();
 
-    const newDataItem = eval(number.at(-1) + sign + generateDataItem);
+    const newDataItem: number = eval(number.at(-1) + sign + generateDataItem);
 
     if (newDataItem <= START_RANDOM || newDataItem >= END_RANDOM) {
       return generateNextItem(number);
