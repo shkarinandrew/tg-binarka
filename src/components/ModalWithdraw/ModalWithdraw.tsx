@@ -22,6 +22,11 @@ const ModalWithdraw: FC<IModalWithdraw> = ({ balance, setBalance, isDisabled }) 
 
   const botUsername = findBotUsername();
 
+  const initialValues = {
+    amount: '',
+    details: '',
+  };
+
   const handleClose = () => {
     setIsOpen(false);
   };
@@ -56,22 +61,23 @@ const ModalWithdraw: FC<IModalWithdraw> = ({ balance, setBalance, isDisabled }) 
       .required('Введите сумму вывода'),
   });
 
+  const handleSubmit = (values: typeof initialValues) => {
+    const details = parseInt(values.details, 10);
+
+    withdrawBalance(userId || 0, -details, botUsername || '').then(
+      ({ new_balance, message }) => {
+        setBalance(new_balance);
+        handleClose();
+        alert(message);
+        formik.resetForm();
+      },
+    );
+  };
+
   const formik = useFormik({
-    initialValues: {
-      amount: '',
-      details: '',
-    },
+    initialValues,
     validationSchema,
-    onSubmit: (values) => {
-      const details = parseInt(values.details, 10);
-      withdrawBalance(userId || 0, -details, botUsername || '').then(
-        ({ new_balance, message }) => {
-          setBalance(new_balance);
-          handleClose();
-          alert(message);
-        },
-      );
-    },
+    onSubmit: handleSubmit,
   });
 
   const placeholderDetails = intl.formatMessage({
