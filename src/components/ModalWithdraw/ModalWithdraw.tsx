@@ -38,6 +38,10 @@ const ModalWithdraw: FC<IModalWithdraw> = ({ balance, setBalance, isDisabled }) 
         'length',
         (value) => {
           const count = parseInt(value.value, 10);
+          if (count <= 0) {
+            return 'Сумма должна быть больше нуля';
+          }
+
           if (count > balance) {
             return `Превышен лимит, вам доступно ${balance}$`;
           }
