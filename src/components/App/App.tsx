@@ -48,7 +48,7 @@ const App: FC = () => {
     if (!subscribeLoading && subscribe) return;
 
     getWins(userId || 0, botUsername || '').then(({ wins }) => {
-      if (wins < 4) return;
+      if (wins < 5) return;
       setIsOpen(true);
     });
   }, [subscribe, subscribeLoading, userId, botUsername]);
