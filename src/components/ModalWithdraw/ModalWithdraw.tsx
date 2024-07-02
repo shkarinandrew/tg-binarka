@@ -111,7 +111,7 @@ const ModalWithdraw: FC<IModalWithdraw> = ({ balance, setBalance, isDisabled }) 
       <Button
         disabled={isDisabled}
         onClick={handleOpen}
-        className='bg-primary-100 text-xs px-[7px] py-0.5 disabled:bg-gray'
+        className='bg-primary-100 text-xs lg:text-[13px] px-[7px] py-0.5 disabled:bg-gray'
       >
         <FormattedMessage id='withdraw_btn' />
       </Button>

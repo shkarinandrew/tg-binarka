@@ -14,7 +14,7 @@ const Balance: FC<IBalance> = ({ value, isWin, setBalance, isDisabled }) => {
 
   return (
     <div className='flex items-center justify-between border-2 border-purple text-white py-[10px] px-2 rounded-2xl'>
-      <div className='text-sm font-medium'>
+      <div className='text-sm sm:text-[16px] md:text-[17px] lg:text-[18px] font-medium'>
         <FormattedMessage id='balance' />: <span className='font-semibold'>${value}</span>{' '}
         {isNotNullWin && (
           <span className={`font-semibold ${classNameIsWin}`}>

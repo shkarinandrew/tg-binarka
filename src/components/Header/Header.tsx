@@ -31,7 +31,7 @@ const Header: FC = () => {
   };
 
   return (
-    <div className='w-full text-white text-[10px] flex items-center justify-between'>
+    <div className='w-full text-white text-[10px] sm:text-[12px] lg:text-[13px] flex items-center justify-between'>
       <div className='flex items-center gap-[5px]'>
         <GrammerlyIcon />
         <div>

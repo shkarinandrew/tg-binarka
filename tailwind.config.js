@@ -16,6 +16,12 @@ export default {
         500: '#0055FF',
       },
     },
+    screens: {
+      sm: '375px',
+      md: '390px',
+      lg: '414px',
+      xl: '428px',
+    },
     extend: {
       boxShadow: {
         'btn-green':

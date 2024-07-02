@@ -153,7 +153,7 @@ const HomePage: FC = () => {
       </div>
       <div className='w-full flex flex-col gap-[10px]'>
         <Button
-          className='w-full bg-purple text-xs font-medium'
+          className='w-full bg-purple text-xs sm:text-[13px] md:text-[14px] font-medium'
           leftIcon={<CupIcon />}
           rightIcon={<CupIcon />}
           onClick={handleSubscribe}
@@ -170,7 +170,7 @@ const HomePage: FC = () => {
           <Button
             disabled={disabled}
             onClick={() => handleUpOrDown('up')}
-            className='bg-green w-full overflow-hidden text-sm !text-black relative font-semibold py-[9px] rounded-[10px] shadow-btn-green uppercase disabled:bg-green/50 disabled:cursor-not-allowed before:content-[""] before:w-[100px] before:h-[100px] before:bg-[#20FF80] before:z-0 before:absolute before:rotate-45 before:top-[25px] before:rounded-md disabled:before:bg-[#20FF80]/30'
+            className='bg-green w-full overflow-hidden text-sm sm:text-[15px] md:text-[16px] lg:text-[17px] !text-black relative font-semibold py-[9px] sm:py-[11px] lg:py-[12px] rounded-[10px] shadow-btn-green uppercase disabled:bg-green/50 disabled:cursor-not-allowed before:content-[""] before:w-[100px] before:h-[100px] before:bg-[#20FF80] before:z-0 before:absolute before:rotate-45 before:top-[25px] before:rounded-md disabled:before:bg-[#20FF80]/30'
           >
             <div className='z-10'>
               ${defaultCount} <FormattedMessage id='up_btn' />
@@ -179,7 +179,7 @@ const HomePage: FC = () => {
           <Button
             disabled={disabled}
             onClick={() => handleUpOrDown('down')}
-            className='bg-red w-full overflow-hidden text-sm font-semibold py-[9px] relative rounded-[10px] shadow-btn-red uppercase disabled:bg-red/50 disabled:cursor-not-allowed before:content-[""] before:w-[100px] before:h-[100px] before:bg-[#E75085] before:z-0 before:absolute before:rotate-45 before:bottom-[25px] before:rounded-md disabled:before:bg-[#E75085]/30'
+            className='bg-red w-full overflow-hidden text-sm sm:text-[15px] md:text-[16px] lg:text-[17px] font-semibold py-[9px] sm:py-[11px] lg:py-[12px] relative rounded-[10px] shadow-btn-red uppercase disabled:bg-red/50 disabled:cursor-not-allowed before:content-[""] before:w-[100px] before:h-[100px] before:bg-[#E75085] before:z-0 before:absolute before:rotate-45 before:bottom-[25px] before:rounded-md disabled:before:bg-[#E75085]/30'
           >
             <div className='z-10'>
               ${defaultCount} <FormattedMessage id='down_btn' />

@@ -26,7 +26,7 @@ const ChartHeader: FC<IChartHeader> = ({ count }) => {
   }, [count]);
 
   return (
-    <div className='flex justify-between items-center w-full border-b border-b-gray py-[10px] text-base'>
+    <div className='flex justify-between items-center w-full border-b border-b-gray py-[10px] text-base sm:text-[19px] md:text-[20px] xl:text-[21px]'>
       <div className='flex justify-center gap-[7px] items-center w-1/2 border-r border-r-gray'>
         <UsdtIcon />
         USDT-BTC
