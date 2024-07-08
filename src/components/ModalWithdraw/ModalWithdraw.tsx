@@ -14,6 +14,7 @@ import { IModalWithdraw } from './ModalWithdraw.interface';
 const ModalWithdraw: FC<IModalWithdraw> = ({ balance, setBalance, isDisabled }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [active, setActive] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   const intl = useIntl();
 
@@ -63,12 +64,17 @@ const ModalWithdraw: FC<IModalWithdraw> = ({ balance, setBalance, isDisabled }) 
 
   const handleSubmit = (values: typeof initialValues) => {
     const details = parseInt(values.details, 10);
+    setIsLoading(true);
 
-    withdrawBalance(userId || 0, details, botUsername || '').then(() => {
-      setBalance((prev) => prev - details);
-      handleClose();
-      formik.resetForm();
-    });
+    withdrawBalance(userId || 0, details, botUsername || '')
+      .then(() => {
+        setBalance((prev) => prev - details);
+        handleClose();
+        formik.resetForm();
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   const formik = useFormik({
@@ -164,7 +170,11 @@ const ModalWithdraw: FC<IModalWithdraw> = ({ balance, setBalance, isDisabled }) 
             />
           </div>
           <div className='flex flex-col gap-2 mt-5'>
-            <Button type='submit' className='bg-primary-100 w-full rounded-[4px]'>
+            <Button
+              type='submit'
+              className='bg-primary-100 w-full rounded-[4px]'
+              disabled={isLoading}
+            >
               <FormattedMessage id='submit' />
             </Button>
             <Button
