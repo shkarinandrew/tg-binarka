@@ -41,7 +41,7 @@ const HomePage: FC<IHomePage> = ({ userProfile }) => {
   const [isWin, setIsWin] = useState<boolean | null>(null);
   const [end, setEnd] = useState(0);
   const [type, setType] = useState<ButtonToggleType>();
-  const [balance, setBalance] = useState(userProfile.balance);
+  const [balance, setBalance] = useState(userProfile?.balance || 0);
 
   const botUsername = findBotUsername();
 
