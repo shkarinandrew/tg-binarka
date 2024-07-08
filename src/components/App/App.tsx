@@ -7,6 +7,7 @@ import { ChannelContext } from '../../context/ChannelContext';
 import { LOCALES } from '../../i18n/locales';
 import { messages } from '../../i18n/messages';
 import HomePage from '../../pages/HomePage';
+import { checkSubscription } from '../../services/checkSubscription';
 import { ChannelType, getChannel } from '../../services/getChannel';
 import { getUserProfile, UserProfileType } from '../../services/getUserProfile';
 import { findBotUsername } from '../../utils/findBotUsername';
@@ -21,6 +22,7 @@ const App: FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [userProfile, setUserProfile] = useState<UserProfileType | null>(null);
   const [channel, setChannel] = useState<ChannelType | null>(null);
+  const [isSubscribed, setIsSubscribed] = useState(false);
 
   useEffect(() => {
     viewport?.expand();
@@ -33,16 +35,24 @@ const App: FC = () => {
       setChannel(res);
     });
 
+    checkSubscription(userId, botUsername).then((res) => {
+      setIsSubscribed(res);
+    });
+  }, [userId, botUsername]);
+
+  useEffect(() => {
+    if (!userId || !botUsername) return;
+
     getUserProfile(userId, botUsername).then((res) => {
       setUserProfile(res);
 
-      if (!res.subscriptionStatus || res.wins >= 5) {
+      if (!isSubscribed || res.wins >= 5) {
         setIsOpen(true);
       } else {
         setIsOpen(false);
       }
     });
-  }, [userId, botUsername]);
+  }, [userId, botUsername, isSubscribed]);
 
   if (!userProfile)
     return (
@@ -59,7 +69,7 @@ const App: FC = () => {
         defaultLocale={LOCALES.en.value}
       >
         <HomePage userProfile={userProfile} />
-        {channel && !userProfile.subscriptionStatus && (
+        {channel && !isSubscribed && (
           <ModalSubscribe isOpen={isOpen} onClose={() => setIsOpen(false)} />
         )}
       </IntlProvider>
