@@ -1,5 +1,5 @@
 import { createContext } from 'react';
 
-import { Channel } from '../interface/Channel.interface';
+import { ChannelType } from '../services/getChannel';
 
-export const ChannelContext = createContext<Channel | null>(null);
+export const ChannelContext = createContext<ChannelType | null>(null);

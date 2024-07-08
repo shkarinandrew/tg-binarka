@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 
 import GrammerlyIcon from '../../assets/icons/grammerly.svg';
 import InformationIcon from '../../assets/icons/information.svg';
-import { getNeedHelp } from '../../services/getNeedHelp';
+import { gameHelp } from '../../services/gameHelp';
 import { findBotUsername } from '../../utils/findBotUsername';
 import { getRandom } from '../../utils/getRandom';
 
@@ -27,7 +27,10 @@ const Header: FC = () => {
 
   const handleClick = () => {
     const userId = initData?.user?.id;
-    getNeedHelp(userId || 0, botUsername || '').then(() => miniApp.close());
+
+    if (!userId || !botUsername) return;
+
+    gameHelp(userId, botUsername).then(() => miniApp.close());
   };
 
   return (

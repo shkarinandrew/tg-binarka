@@ -64,14 +64,11 @@ const ModalWithdraw: FC<IModalWithdraw> = ({ balance, setBalance, isDisabled }) 
   const handleSubmit = (values: typeof initialValues) => {
     const details = parseInt(values.details, 10);
 
-    withdrawBalance(userId || 0, -details, botUsername || '').then(
-      ({ new_balance, message }) => {
-        setBalance(new_balance);
-        handleClose();
-        alert(message);
-        formik.resetForm();
-      },
-    );
+    withdrawBalance(userId || 0, details, botUsername || '').then(() => {
+      setBalance((prev) => prev - details);
+      handleClose();
+      formik.resetForm();
+    });
   };
 
   const formik = useFormik({

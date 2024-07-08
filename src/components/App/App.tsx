@@ -2,58 +2,49 @@ import { FC, useEffect, useState } from 'react';
 import { IntlProvider } from 'react-intl';
 import { SyncLoader } from 'react-spinners';
 
-import { useInitData, useMiniApp, useViewport } from '@tma.js/sdk-react';
+import { useInitData, useViewport } from '@tma.js/sdk-react';
 import { ChannelContext } from '../../context/ChannelContext';
-import { SubscribeModalContext } from '../../context/SubscribeModalContext';
-import { useAxios } from '../../hooks/useAxios';
 import { LOCALES } from '../../i18n/locales';
 import { messages } from '../../i18n/messages';
-import { Channel } from '../../interface/Channel.interface';
-import { Subscription } from '../../interface/Subsription.interface';
 import HomePage from '../../pages/HomePage';
-import { getWins } from '../../services/getWins';
+import { ChannelType, getChannel } from '../../services/getChannel';
+import { getUserProfile, UserProfileType } from '../../services/getUserProfile';
 import { findBotUsername } from '../../utils/findBotUsername';
 import ModalSubscribe from '../ModalSubscribe';
 
-const { VITE_APP_GATEWAY_URL, VITE_APP_API_URL } = import.meta.env;
-
 const App: FC = () => {
   const initData = useInitData();
-  const miniApp = useMiniApp();
   const viewport = useViewport();
   const userId = initData?.user?.id;
   const botUsername = findBotUsername();
 
   const [isOpen, setIsOpen] = useState(false);
-
-  const { data: subscribe, loading: subscribeLoading } = useAxios<Subscription>(
-    `${VITE_APP_API_URL}/check_subscription/${userId}/${botUsername}`,
-    'GET',
-  );
-
-  const { loading: channelLoading, data: channel } = useAxios<Channel>(
-    `${VITE_APP_GATEWAY_URL}/webapp/credentials/${botUsername}`,
-    'GET',
-  );
+  const [userProfile, setUserProfile] = useState<UserProfileType | null>(null);
+  const [channel, setChannel] = useState<ChannelType | null>(null);
 
   useEffect(() => {
     viewport?.expand();
   }, [viewport]);
 
   useEffect(() => {
-    miniApp.ready();
-  }, []);
+    if (!userId || !botUsername) return;
 
-  useEffect(() => {
-    if (!subscribeLoading && subscribe) return;
-
-    getWins(userId || 0, botUsername || '').then(({ wins }) => {
-      if (wins < 5) return;
-      setIsOpen(true);
+    getChannel(botUsername).then((res) => {
+      setChannel(res);
     });
-  }, [subscribe, subscribeLoading, userId, botUsername]);
 
-  if (subscribeLoading || channelLoading)
+    getUserProfile(userId, botUsername).then((res) => {
+      setUserProfile(res);
+
+      if (!res.subscriptionStatus || res.wins >= 5) {
+        setIsOpen(true);
+      } else {
+        setIsOpen(false);
+      }
+    });
+  }, [userId, botUsername]);
+
+  if (!userProfile)
     return (
       <div className='w-full h-screen flex justify-center items-center fixed top-0 left-0 bg-black text-white'>
         <SyncLoader color='#fff' />
@@ -62,25 +53,16 @@ const App: FC = () => {
 
   return (
     <ChannelContext.Provider value={channel}>
-      <SubscribeModalContext.Provider
-        value={{ isOpen, setIsOpen, isSubscribed: !!subscribe?.is_subscribed }}
+      <IntlProvider
+        messages={messages[LOCALES[userProfile?.languageCode || 'en'].value]}
+        locale={LOCALES[userProfile?.languageCode || 'en'].value}
+        defaultLocale={LOCALES.en.value}
       >
-        <IntlProvider
-          messages={messages[LOCALES[channel?.geo || 'en'].value]}
-          locale={LOCALES[channel?.geo || 'en'].value}
-          defaultLocale={LOCALES.en.value}
-        >
-          <HomePage />
-          {channel && !subscribe?.is_subscribed && (
-            <ModalSubscribe
-              channelName={channel.channel_title}
-              channelSrc={channel.image_link}
-              isOpen={isOpen}
-              onClose={() => setIsOpen(false)}
-            />
-          )}
-        </IntlProvider>
-      </SubscribeModalContext.Provider>
+        <HomePage userProfile={userProfile} />
+        {channel && !userProfile.subscriptionStatus && (
+          <ModalSubscribe isOpen={isOpen} onClose={() => setIsOpen(false)} />
+        )}
+      </IntlProvider>
     </ChannelContext.Provider>
   );
 };

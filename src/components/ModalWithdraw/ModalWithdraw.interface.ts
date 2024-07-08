@@ -1,5 +1,5 @@
 export interface IModalWithdraw {
   balance: number;
-  setBalance: (balance: number) => void;
+  setBalance: React.Dispatch<React.SetStateAction<number>>;
   isDisabled: boolean;
 }

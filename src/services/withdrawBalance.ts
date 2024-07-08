@@ -12,9 +12,11 @@ export const withdrawBalance = async (
   amount: number,
   botUsername: string,
 ) => {
-  const res = await axios.post<WithdrawBalance>(
-    `${VITE_APP_API_URL}/withdraw_balance/${userId}/${amount}/${botUsername}`,
-  );
+  const res = await axios.post<WithdrawBalance>(`${VITE_APP_API_URL}/withdraw`, {
+    userId,
+    amount,
+    botUsername,
+  });
   const data = res.data;
 
   return data;

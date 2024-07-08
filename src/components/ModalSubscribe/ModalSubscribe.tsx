@@ -7,12 +7,7 @@ import Button from '../Button';
 import Modal from '../Modal';
 import { IModalSubscribe } from './ModalSubscribe.interface';
 
-const ModalSubscribe: FC<IModalSubscribe> = ({
-  channelName,
-  channelSrc,
-  isOpen,
-  onClose,
-}) => {
+const ModalSubscribe: FC<IModalSubscribe> = ({ isOpen, onClose }) => {
   const context = useContext(ChannelContext);
 
   const utils = useUtils();
@@ -32,11 +27,13 @@ const ModalSubscribe: FC<IModalSubscribe> = ({
           <div className='w-[100px] h-[100px] rounded-full overflow-hidden border-4 border-primary-100'>
             <img
               className='w0full h-full object-cover'
-              src={channelSrc}
-              alt={channelName}
+              src={`data:image/png;base64,${context?.channel_picture}`}
+              alt={context?.channel_title}
             />
           </div>
-          <div className='text-xs uppercase font-medium text-center'>{channelName}</div>
+          <div className='text-xs uppercase font-medium text-center'>
+            {context?.channel_title}
+          </div>
         </div>
         <div className='text-gray font-medium text-sm text-center'>
           <FormattedMessage id='subscribe_context' />

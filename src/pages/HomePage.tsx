@@ -10,24 +10,23 @@ import Header from '../components/Header';
 import Time from '../components/Time';
 import { END_RANDOM, START_RANDOM } from '../config';
 import { ChannelContext } from '../context/ChannelContext';
-import { SubscribeModalContext } from '../context/SubscribeModalContext';
-import { getBalance } from '../services/getBalance';
-import { getWins } from '../services/getWins';
-import { updateBalance } from '../services/updateBalance';
-import { updateIncreaseWins } from '../services/updateIncreaseWins';
+import { gameResult } from '../services/gameResult';
+import { UserProfileType } from '../services/getUserProfile';
 import { findBotUsername } from '../utils/findBotUsername';
 import { generateRandomSign } from '../utils/generateRandomSign';
 import { getRandom } from '../utils/getRandom';
 
 type ButtonToggleType = 'up' | 'down';
+interface IHomePage {
+  userProfile: UserProfileType;
+}
 
 const { VITE_TIME_SECOND, VITE_COUNT_WIN_OR_LOSE } = import.meta.env;
 const defaultCount = parseInt(VITE_COUNT_WIN_OR_LOSE, 10) || 10;
 const defaultTime = parseInt(VITE_TIME_SECOND, 10) || 5;
 
-const HomePage: FC = () => {
+const HomePage: FC<IHomePage> = ({ userProfile }) => {
   const context = useContext(ChannelContext);
-  const contextSubscribe = useContext(SubscribeModalContext);
 
   const initData = useInitData();
   const viewport = useViewport();
@@ -42,13 +41,9 @@ const HomePage: FC = () => {
   const [isWin, setIsWin] = useState<boolean | null>(null);
   const [end, setEnd] = useState(0);
   const [type, setType] = useState<ButtonToggleType>();
-  const [balance, setBalance] = useState(0);
+  const [balance, setBalance] = useState(userProfile.balance);
 
   const botUsername = findBotUsername();
-
-  useEffect(() => {
-    getBalance(userId || 0, botUsername || '').then((res) => setBalance(res.balance));
-  }, [userId, balance, botUsername]);
 
   const count = data.at(-1) || 0;
 
@@ -73,17 +68,11 @@ const HomePage: FC = () => {
       setIsWin(toggle);
       setBalance((prev) => prev + countWinOrLose);
 
-      updateBalance(userId || 0, countWinOrLose, botUsername || '');
-      updateIncreaseWins(userId || 0, botUsername || '').then(() => {
-        if (contextSubscribe?.isSubscribed) return;
+      if (!userId || !botUsername) return;
 
-        getWins(userId || 0, botUsername || '').then(({ wins }) => {
-          if (wins < 5) return;
-          contextSubscribe?.setIsOpen(true);
-        });
-      });
+      gameResult(userId, botUsername, toggle, defaultCount);
     },
-    [userId, botUsername, contextSubscribe?.isSubscribed],
+    [userId, botUsername],
   );
 
   useEffect(() => {
