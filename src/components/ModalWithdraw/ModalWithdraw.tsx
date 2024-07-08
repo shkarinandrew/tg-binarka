@@ -172,7 +172,7 @@ const ModalWithdraw: FC<IModalWithdraw> = ({ balance, setBalance, isDisabled }) 
           <div className='flex flex-col gap-2 mt-5'>
             <Button
               type='submit'
-              className='bg-primary-100 w-full rounded-[4px]'
+              className='bg-primary-100 w-full rounded-[4px] disabled:bg-gray'
               disabled={isLoading}
             >
               <FormattedMessage id='submit' />
