@@ -24,6 +24,8 @@ const App: FC = () => {
   const [channel, setChannel] = useState<ChannelType | null>(null);
   const [isSubscribed, setIsSubscribed] = useState(false);
 
+  const gameCount = parseInt(localStorage.getItem('gameCount') || '0', 10);
+
   useEffect(() => {
     viewport?.expand();
   }, [viewport]);
@@ -46,15 +48,13 @@ const App: FC = () => {
     getUserProfile(userId, botUsername).then((res) => {
       setUserProfile(res);
 
-      const gameCount = parseInt(localStorage.getItem('gameCount') || '0', 10);
-
       if (!isSubscribed && gameCount >= 5) {
         setIsOpen(true);
       } else {
         setIsOpen(false);
       }
     });
-  }, [userId, botUsername, isSubscribed]);
+  }, [userId, botUsername, isSubscribed, gameCount]);
 
   if (!userProfile)
     return (
