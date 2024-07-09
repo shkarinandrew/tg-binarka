@@ -46,7 +46,9 @@ const App: FC = () => {
     getUserProfile(userId, botUsername).then((res) => {
       setUserProfile(res);
 
-      if (!isSubscribed || res.wins >= 5) {
+      const gameCount = parseInt(localStorage.getItem('gameCount') || '0', 10);
+
+      if (!isSubscribed && gameCount >= 5) {
         setIsOpen(true);
       } else {
         setIsOpen(false);

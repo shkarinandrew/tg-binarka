@@ -68,6 +68,9 @@ const HomePage: FC<IHomePage> = ({ userProfile }) => {
       setIsWin(toggle);
       setBalance((prev) => prev + countWinOrLose);
 
+      const gameCount = parseInt(localStorage.getItem('gameCount') || '0', 10);
+      localStorage.setItem('gameCount', (gameCount + 1).toString());
+
       if (!userId || !botUsername) return;
 
       gameResult(userId, botUsername, toggle, defaultCount);
