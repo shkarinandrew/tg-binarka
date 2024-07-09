@@ -19,13 +19,14 @@ import { getRandom } from '../utils/getRandom';
 type ButtonToggleType = 'up' | 'down';
 interface IHomePage {
   userProfile: UserProfileType;
+  setCount: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const { VITE_TIME_SECOND, VITE_COUNT_WIN_OR_LOSE } = import.meta.env;
 const defaultCount = parseInt(VITE_COUNT_WIN_OR_LOSE, 10) || 10;
 const defaultTime = parseInt(VITE_TIME_SECOND, 10) || 5;
 
-const HomePage: FC<IHomePage> = ({ userProfile }) => {
+const HomePage: FC<IHomePage> = ({ userProfile, setCount }) => {
   const context = useContext(ChannelContext);
 
   const initData = useInitData();
@@ -68,6 +69,7 @@ const HomePage: FC<IHomePage> = ({ userProfile }) => {
       setIsWin(toggle);
       setBalance((prev) => prev + countWinOrLose);
 
+      setCount((prev) => prev + 1);
       const gameCount = parseInt(localStorage.getItem('gameCount') || '0', 10);
       localStorage.setItem('gameCount', (gameCount + 1).toString());
 

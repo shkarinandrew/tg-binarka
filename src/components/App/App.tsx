@@ -19,10 +19,13 @@ const App: FC = () => {
   const userId = initData?.user?.id;
   const botUsername = findBotUsername();
 
+  const gameCount = parseInt(localStorage.getItem('gameCount') || '0', 10);
+
   const [isOpen, setIsOpen] = useState(false);
   const [userProfile, setUserProfile] = useState<UserProfileType | null>(null);
   const [channel, setChannel] = useState<ChannelType | null>(null);
   const [isSubscribed, setIsSubscribed] = useState(false);
+  const [count, setCount] = useState(gameCount);
 
   useEffect(() => {
     viewport?.expand();
@@ -43,21 +46,16 @@ const App: FC = () => {
   useEffect(() => {
     if (!userId || !botUsername) return;
 
-    const interval = setInterval(() => {
-      getUserProfile(userId, botUsername).then((res) => {
-        setUserProfile(res);
-        const gameCount = parseInt(localStorage.getItem('gameCount') || '0', 10);
+    getUserProfile(userId, botUsername).then((res) => {
+      setUserProfile(res);
 
-        if (!isSubscribed && gameCount >= 5) {
-          setIsOpen(true);
-        } else {
-          setIsOpen(false);
-        }
-      });
-    }, 5_000);
-
-    return () => clearInterval(interval);
-  }, [userId, botUsername, isSubscribed]);
+      if (!isSubscribed && count >= 5) {
+        setIsOpen(true);
+      } else {
+        setIsOpen(false);
+      }
+    });
+  }, [userId, botUsername, isSubscribed, count]);
 
   if (!userProfile)
     return (
@@ -73,7 +71,7 @@ const App: FC = () => {
         locale={LOCALES[userProfile?.languageCode || 'en'].value}
         defaultLocale={LOCALES.en.value}
       >
-        <HomePage userProfile={userProfile} />
+        <HomePage userProfile={userProfile} setCount={setCount} />
         {channel && !isSubscribed && (
           <ModalSubscribe isOpen={isOpen} onClose={() => setIsOpen(false)} />
         )}
