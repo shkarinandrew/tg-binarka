@@ -3,7 +3,7 @@ import { FC, useCallback, useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import * as Yup from 'yup';
 
-import { useInitData } from '@tma.js/sdk-react';
+import { useInitData, useMiniApp } from '@tma.js/sdk-react';
 import { withdrawBalance } from '../../services/withdrawBalance';
 import { findBotUsername } from '../../utils/findBotUsername';
 import Button from '../Button';
@@ -12,6 +12,7 @@ import Modal from '../Modal';
 import { IModalWithdraw } from './ModalWithdraw.interface';
 
 const ModalWithdraw: FC<IModalWithdraw> = ({ balance, setBalance, isDisabled }) => {
+  const miniApp = useMiniApp();
   const [isOpen, setIsOpen] = useState(false);
   const [active, setActive] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -71,6 +72,7 @@ const ModalWithdraw: FC<IModalWithdraw> = ({ balance, setBalance, isDisabled }) 
         setBalance((prev) => prev - details);
         handleClose();
         formik.resetForm();
+        miniApp?.close();
       })
       .finally(() => {
         setIsLoading(false);
@@ -119,7 +121,7 @@ const ModalWithdraw: FC<IModalWithdraw> = ({ balance, setBalance, isDisabled }) 
         <FormattedMessage id='withdraw_btn' />
       </Button>
 
-      <Modal isOpen={isOpen} onClose={handleClose}>
+      <Modal isOpen={isOpen} onClose={handleClose} className='!justify-start mt-10'>
         <form onSubmit={formik.handleSubmit} className='min-w-[285px]'>
           <div className='text-center font-bold text-lg'>
             <FormattedMessage id='withdraw_funds' />
@@ -143,6 +145,9 @@ const ModalWithdraw: FC<IModalWithdraw> = ({ balance, setBalance, isDisabled }) 
             >
               USDT
             </Button>
+          </div>
+          <div className='text-center mt-2'>
+            <FormattedMessage id='balance' />: {balance}$
           </div>
           <div className='flex flex-col gap-2 mt-4'>
             <Input
