@@ -17,6 +17,8 @@ export const messages = {
     submit: 'Submit',
     close: 'Close',
 
+    make_bet: 'make bet',
+
     subscribe_context:
       'Subscribe to the channel and receive a $100 bonus to your account. After subscribing, refresh the bot`s page',
     subscribe_btn: 'Get 100$',
@@ -38,6 +40,8 @@ export const messages = {
     submit: 'Отправить',
     close: 'Отмена',
 
+    make_bet: 'Сделайте ставку',
+
     subscribe_context:
       'Подпишитесь на канал и получите бонус в размере 100$ на свой счет. После подписки, обновите страницу бота',
     subscribe_btn: 'Получить 100$',
@@ -58,6 +62,9 @@ export const messages = {
     amount: 'Betrag',
     submit: 'Einreichen',
     close: 'Schließen',
+
+    make_bet: 'Wette abschließen',
+
     subscribe_context:
       'Melden Sie sich für den Kanal an und erhalten Sie einen Bonus von $100 auf Ihr Konto. Aktualisieren Sie nach dem Abonnement die Bot-Seite',
     subscribe_btn: '100$ erhalten',
@@ -78,6 +85,9 @@ export const messages = {
     amount: 'Importo',
     submit: 'Invia',
     close: 'Chiudi',
+
+    make_bet: 'fare una scommessa',
+
     subscribe_context:
       'Iscriviti al canale e ricevi un bonus di $100 sul tuo account. Dopo l`iscrizione, aggiorna la pagina del bot',
     subscribe_btn: 'Ottieni 100$',
@@ -98,6 +108,7 @@ export const messages = {
     amount: 'Montant',
     submit: 'Soumettre',
     close: 'Fermer',
+    make_bet: 'faire un pari',
     subscribe_context:
       'Abonnez-vous à la chaîne et recevez un bonus de 100$ sur votre compte. Après vous être abonné, actualisez la page du bot',
     subscribe_btn: 'Obtenez 100$',
@@ -118,6 +129,7 @@ export const messages = {
     amount: 'Monto',
     submit: 'Enviar',
     close: 'Cerrar',
+    make_bet: 'hacer apuesta',
     subscribe_context:
       'Suscríbase al canal y obtenga un bono de $100 en su cuenta. Después de suscribirse, actualice la página del bot',
     subscribe_btn: '¡Obtén 100$!',
