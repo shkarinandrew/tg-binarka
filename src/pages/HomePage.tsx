@@ -1,11 +1,13 @@
 import { FC, useCallback, useContext, useEffect, useState } from 'react';
 
 import { useInitData, useUtils } from '@tma.js/sdk-react';
+import moment from 'moment';
 import { FormattedMessage } from 'react-intl';
 import CupIcon from '../assets/icons/cup.svg';
 import Balance from '../components/Balance';
 import Button from '../components/Button';
 import Chart from '../components/Chart';
+import { ChartDataType } from '../components/Chart/Chart.interface';
 import Header from '../components/Header';
 import Time from '../components/Time';
 import { END_RANDOM, START_RANDOM } from '../config';
@@ -37,7 +39,13 @@ const HomePage: FC<IHomePage> = ({ userProfile, setCount }) => {
 
   const userId = initData?.user?.id.toString();
 
-  const [data, setData] = useState<number[]>([getRandom(START_RANDOM, END_RANDOM)]);
+  const date = moment(Date.now()).unix();
+  const defaultData = {
+    count: getRandom(START_RANDOM, END_RANDOM),
+    date,
+  };
+
+  const [data, setData] = useState<ChartDataType[]>([defaultData]);
   const [time, setTime] = useState<number>(defaultTime);
   const [start, setStart] = useState(0);
   const [disabled, setDisabled] = useState(false);
@@ -48,7 +56,7 @@ const HomePage: FC<IHomePage> = ({ userProfile, setCount }) => {
 
   const botUsername = findBotUsername();
 
-  const count = data.at(-1) || 0;
+  const count = data.at(-1)?.count || 0;
 
   const handleSubscribe = () => {
     if (!context?.invite_link) return;
@@ -112,17 +120,22 @@ const HomePage: FC<IHomePage> = ({ userProfile, setCount }) => {
     return () => clearInterval(interval);
   }, [disabled, time, winOrLoseUpdate]);
 
-  const generateNextItem = useCallback((number: number[]): number => {
+  const generateNextItem = useCallback((arr: ChartDataType[]): ChartDataType => {
     const generateDataItem = getRandom(1, 10);
     const sign = generateRandomSign();
 
-    const newDataItem: number = eval(number.at(-1) + sign + generateDataItem);
+    const newDataItem: number = eval(arr.at(-1)?.count + sign + generateDataItem);
 
     if (newDataItem <= START_RANDOM || newDataItem >= END_RANDOM) {
-      return generateNextItem(number);
+      return generateNextItem(arr);
     }
 
-    return newDataItem;
+    const date = moment(Date.now()).add(arr.length, 'second').unix();
+
+    return {
+      count: newDataItem,
+      date: date,
+    };
   }, []);
 
   useEffect(() => {
@@ -137,8 +150,9 @@ const HomePage: FC<IHomePage> = ({ userProfile, setCount }) => {
         return [...prev, newDataItem];
       });
     }, 1_000);
+
     return () => clearInterval(interval);
-  }, [generateNextItem]);
+  }, []);
 
   return (
     <div
