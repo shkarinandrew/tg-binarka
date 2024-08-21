@@ -1,16 +1,9 @@
 import { FC, useRef } from 'react';
 
 import { useDimensions } from '../../hooks/useDimensions';
+import { IChart } from './Chart.interface';
 import ChartHeader from './ChartHeader';
 import LineChart from './LineChart';
-
-interface IChart {
-  data: number[];
-  count: number;
-  start: number;
-  end: number;
-  isWin: boolean | null;
-}
 
 const Chart: FC<IChart> = ({ data, count, start, end, isWin }) => {
   const ref = useRef<HTMLDivElement>(null);
