@@ -1,0 +1,44 @@
+variables:
+  PIPELINELIB_VERSION: &PL_REF v0.11.1
+
+include:
+  - project: devops/pipelines
+    ref: *PL_REF
+    file:
+      - /settings.yaml
+      - /lib/workflows/general.yaml
+      - /lib/build/nodejs.yaml
+      - /lib/build/oci.yaml
+      - /lib/gitops/rollout.yaml
+
+
+.build_dev_vars:
+  - export VITE_APP_API_URL=https://api.binarka-wad.monowork.dev
+  - export VITE_APP_TOKEN=GaB3Fl2lbD93H832z8ZYBHev3VaK
+  - export VITE_PORT=3000
+
+stages:
+  - build
+  - rollout
+
+build dist:
+  extends:
+    - .build/nodejs
+  before_script:
+    - !reference [ .build_dev_vars ]
+    - !reference [ .build/nodejs, before_script ]
+
+build image:
+  extends: .build/oci
+  variables:
+    USE_CORP_CR: 1
+    OCI_PROJECT_NAME: binarka/frontend
+  needs: ["build dist"]
+  dependencies: ["build dist"]
+
+rollout dev:
+  extends: .gitops/rollout
+  rules: !reference [.rules/rollout-dev]
+  variables:
+    SERVICE_NAME: binarka-frontend
+    ENV_NAME: dev
