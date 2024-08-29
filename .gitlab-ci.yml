@@ -14,7 +14,7 @@ include:
 
 .build_dev_vars:
   - export VITE_APP_API_URL=https://api.binarka-wad.monowork.dev/game
-  - export VITE_APP_TOKEN=GaB3Fl2lbD93H832z8ZYBHev3VaK
+  - export VITE_APP_TOKEN=0gE49nwqAmJIvxDxNxZxBDEwNKso
   - export VITE_PORT=3000
 
 stages:
