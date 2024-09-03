@@ -19,12 +19,14 @@ include:
         export VITE_APP_API_URL=$VITE_APP_API_URL_DEV
         export VITE_APP_TOKEN=$VITE_APP_TOKEN_DEV
         echo "ENV=dev"
-    else [ "$ENV" == "production" ]; then
+    elif [ "$ENV" == "production" ]; then
         export VITE_APP_API_URL=$VITE_APP_API_URL_PROD
         export VITE_APP_TOKEN=$VITE_APP_TOKEN_PROD
         echo "ENV=production"
-    fi    
-
+    else
+        echo "Переменная ENV имеет некорректное значение: $ENV"
+    fi
+    
 stages:
   - build
   - rollout
