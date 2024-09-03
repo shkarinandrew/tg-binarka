@@ -14,16 +14,16 @@ include:
 
 .build_vars:
   - export VITE_PORT=3000
-  - echo $ENV
+  - echo $DEPLOY_TARGET
   - |
-    if [ "$ENV" == "dev" ]; then
+    if [ "$DEPLOY_TARGET" == "dev" ]; then
         export VITE_APP_API_URL=$VITE_APP_API_URL_DEV
         export VITE_APP_TOKEN=$VITE_APP_TOKEN_DEV
-    elif [ "$ENV" == "production" ]; then
+    elif [ "$DEPLOY_TARGET" == "production" ]; then
         export VITE_APP_API_URL=$VITE_APP_API_URL_PROD
         export VITE_APP_TOKEN=$VITE_APP_TOKEN_PROD
     else
-        echo "Переменная ENV имеет некорректное значение: $ENV"
+        echo "Переменная DEPLOY_TARGET имеет некорректное значение: $DEPLOY_TARGET"
     fi
     
 stages:
