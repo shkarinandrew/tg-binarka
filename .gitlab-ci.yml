@@ -12,10 +12,17 @@ include:
       - /lib/gitops/rollout.yaml
 
 
-.build_dev_vars:
-  - export VITE_APP_API_URL=https://api.binarka-wad.monowork.dev/game
-  - export VITE_APP_TOKEN=0gE49nwqAmJIvxDxNxZxBDEwNKso
+.build_vars:
   - export VITE_PORT=3000
+  - |
+    if [ "$ENV" == "dev" ]; then
+        export VITE_APP_API_URL=$VITE_APP_API_URL_DEV
+        export VITE_APP_TOKEN=$VITE_APP_TOKEN_DEV
+        echo "ENV=dev"
+    elif [ "$ENV" == "production" ]; then
+        export VITE_APP_API_URL=$VITE_APP_API_URL_PROD
+        export VITE_APP_TOKEN=$VITE_APP_TOKEN_PROD
+        echo "ENV=production"
 
 stages:
   - build
@@ -25,7 +32,7 @@ build dist:
   extends:
     - .build/nodejs
   before_script:
-    - !reference [ .build_dev_vars ]
+    - !reference [ .build_vars ]
     - !reference [ .build/nodejs, before_script ]
 
 build image:
