@@ -19,9 +19,13 @@ include:
     if [ "$DEPLOY_TARGET" == "dev" ]; then
         export VITE_APP_API_URL=$VITE_APP_API_URL_DEV
         export VITE_APP_TOKEN=$VITE_APP_TOKEN_DEV
+        export VITE_TIME_SECOND=$VITE_TIME_SECOND_DEV
+        export VITE_COUNT_WIN_OR_LOSE=$VITE_COUNT_WIN_OR_LOSE_DEV
     elif [ "$DEPLOY_TARGET" == "production" ]; then
         export VITE_APP_API_URL=$VITE_APP_API_URL_PROD
         export VITE_APP_TOKEN=$VITE_APP_TOKEN_PROD
+        export VITE_TIME_SECOND=$VITE_TIME_SECOND_PROD
+        export VITE_COUNT_WIN_OR_LOSE=$VITE_COUNT_WIN_OR_LOSE_PROD
     else
         echo "Переменная DEPLOY_TARGET имеет некорректное значение: $DEPLOY_TARGET"
     fi
