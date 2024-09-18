@@ -1,31 +1,18 @@
-import { FC, useRef } from 'react';
+import { FC, memo } from 'react';
 
-import { useDimensions } from '../../hooks/useDimensions';
-import { IChart } from './Chart.interface';
+import TradingviewChart from '../TradingviewChart';
 import ChartHeader from './ChartHeader';
-import LineChart from './LineChart';
 
-const Chart: FC<IChart> = ({ data, count, start, end, isWin }) => {
-  const ref = useRef<HTMLDivElement>(null);
-  const height = Math.round((window.innerHeight / 100) * 40);
-
-  const { width } = useDimensions(ref);
-
+const Chart: FC = () => {
   return (
-    <div className='rounded-[10px] overflow-hidden w-full border border-gray text-white'>
-      <ChartHeader count={count} />
-      <div ref={ref}>
-        <LineChart
-          start={start}
-          width={width}
-          height={height}
-          data={data}
-          isWin={isWin}
-          end={end}
-        />
-      </div>
+    <div
+      id='chart'
+      className='rounded-[10px] overflow-hidden w-full border border-gray text-white'
+    >
+      <ChartHeader />
+      <TradingviewChart />
     </div>
   );
 };
 
-export default Chart;
+export default memo(Chart);

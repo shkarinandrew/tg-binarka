@@ -1,24 +1,20 @@
-import { FC, useCallback, useContext, useEffect, useState } from 'react';
-
 import { useInitData, useUtils } from '@tma.js/sdk-react';
-import moment from 'moment';
+import { FC, useCallback, useContext, useEffect, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
+
 import CupIcon from '../assets/icons/cup.svg';
 import Balance from '../components/Balance';
 import Button from '../components/Button';
 import Chart from '../components/Chart';
-import { ChartDataType } from '../components/Chart/Chart.interface';
 import Header from '../components/Header';
 import Time from '../components/Time';
-import { END_RANDOM, START_RANDOM } from '../config';
 import { ChannelContext } from '../context/ChannelContext';
 import { SubscribeContext } from '../context/SubscribeContext';
+import { useCount, useGame } from '../hooks';
 import { checkSubscription } from '../services/checkSubscription';
 import { gameResult } from '../services/gameResult';
 import { UserProfileType } from '../services/getUserProfile';
 import { findBotUsername } from '../utils/findBotUsername';
-import { generateRandomSign } from '../utils/generateRandomSign';
-import { getRandom } from '../utils/getRandom';
 
 type ButtonToggleType = 'up' | 'down';
 interface IHomePage {
@@ -33,30 +29,21 @@ const defaultTime = parseInt(VITE_TIME_SECOND, 10) || 5;
 const HomePage: FC<IHomePage> = ({ userProfile, setCount }) => {
   const context = useContext(ChannelContext);
   const contextSubscribe = useContext(SubscribeContext);
+  const { count } = useCount();
+  const { end, start, updateEnd, updateStart } = useGame();
 
   const initData = useInitData();
   const utils = useUtils();
 
   const userId = initData?.user?.id.toString();
 
-  const date = moment(Date.now()).unix();
-  const defaultData = {
-    count: getRandom(START_RANDOM, END_RANDOM),
-    date,
-  };
-
-  const [data, setData] = useState<ChartDataType[]>([defaultData]);
   const [time, setTime] = useState<number>(defaultTime);
-  const [start, setStart] = useState(0);
   const [disabled, setDisabled] = useState(false);
   const [isWin, setIsWin] = useState<boolean | null>(null);
-  const [end, setEnd] = useState(0);
   const [type, setType] = useState<ButtonToggleType>();
   const [balance, setBalance] = useState(userProfile?.balance || 0);
 
   const botUsername = findBotUsername();
-
-  const count = data.at(-1)?.count || 0;
 
   const handleSubscribe = () => {
     if (!context?.invite_link) return;
@@ -66,9 +53,9 @@ const HomePage: FC<IHomePage> = ({ userProfile, setCount }) => {
 
   const handleUpOrDown = (toggle: ButtonToggleType) => {
     setDisabled(true);
-    setStart(count);
+    updateStart(count);
     setIsWin(null);
-    setEnd(0);
+    updateEnd(0);
     setType(toggle);
   };
 
@@ -102,7 +89,7 @@ const HomePage: FC<IHomePage> = ({ userProfile, setCount }) => {
     if (time < 0) {
       setTime(defaultTime);
       setDisabled(false);
-      setEnd(count);
+      updateEnd(count);
 
       if ((type === 'up' && count > start) || (type === 'down' && count <= start)) {
         return winOrLoseUpdate(true);
@@ -120,40 +107,6 @@ const HomePage: FC<IHomePage> = ({ userProfile, setCount }) => {
     return () => clearInterval(interval);
   }, [disabled, time, winOrLoseUpdate]);
 
-  const generateNextItem = useCallback((arr: ChartDataType[]): ChartDataType => {
-    const generateDataItem = getRandom(1, 10);
-    const sign = generateRandomSign();
-
-    const newDataItem: number = eval(arr.at(-1)?.count + sign + generateDataItem);
-
-    if (newDataItem <= START_RANDOM || newDataItem >= END_RANDOM) {
-      return generateNextItem(arr);
-    }
-
-    const date = moment(Date.now()).add(arr.length, 'second').unix();
-
-    return {
-      count: newDataItem,
-      date: date,
-    };
-  }, []);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setData((prev) => {
-        if (prev.length >= 15) {
-          prev.shift();
-        }
-
-        const newDataItem = generateNextItem(prev);
-
-        return [...prev, newDataItem];
-      });
-    }, 1_000);
-
-    return () => clearInterval(interval);
-  }, []);
-
   return (
     <div
       className='w-full bg-[#1C1C1D] px-4 pt-5 pb-10 flex flex-col h-screen gap-5 overflow-y-auto'
@@ -163,7 +116,7 @@ const HomePage: FC<IHomePage> = ({ userProfile, setCount }) => {
     >
       <div className='flex flex-col gap-[10px]'>
         <Header />
-        <Chart data={data} count={count} start={start} end={end} isWin={isWin} />
+        <Chart />
         <Time value={time} />
       </div>
 

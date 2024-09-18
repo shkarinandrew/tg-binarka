@@ -1,9 +1,11 @@
+import { useInitData, useViewport } from '@tma.js/sdk-react';
 import { FC, useEffect, useState } from 'react';
 import { IntlProvider } from 'react-intl';
-
-import { useInitData, useViewport } from '@tma.js/sdk-react';
 import { SyncLoader } from 'react-spinners';
+
 import { ChannelContext } from '../../context/ChannelContext';
+import { CountContextProvider } from '../../context/CountContext';
+import { GameContextProvider } from '../../context/GameContext';
 import { SubscribeContext } from '../../context/SubscribeContext';
 import { LOCALES } from '../../i18n/locales';
 import { messages } from '../../i18n/messages';
@@ -66,20 +68,24 @@ const App: FC = () => {
     );
 
   return (
-    <SubscribeContext.Provider value={{ isSubscribe, setIsSubscribe }}>
-      <ChannelContext.Provider value={channel}>
-        <IntlProvider
-          messages={messages[LOCALES[userProfile?.languageCode || 'en'].value]}
-          locale={LOCALES[userProfile?.languageCode || 'en'].value}
-          defaultLocale={LOCALES.en.value}
-        >
-          <HomePage userProfile={userProfile} setCount={setCount} />
-          {channel && !isSubscribe && (
-            <ModalSubscribe isOpen={isOpen} onClose={() => setIsOpen(false)} />
-          )}
-        </IntlProvider>
-      </ChannelContext.Provider>
-    </SubscribeContext.Provider>
+    <GameContextProvider>
+      <CountContextProvider>
+        <SubscribeContext.Provider value={{ isSubscribe, setIsSubscribe }}>
+          <ChannelContext.Provider value={channel}>
+            <IntlProvider
+              messages={messages[LOCALES[userProfile?.languageCode || 'en'].value]}
+              locale={LOCALES[userProfile?.languageCode || 'en'].value}
+              defaultLocale={LOCALES.en.value}
+            >
+              <HomePage userProfile={userProfile} setCount={setCount} />
+              {channel && !isSubscribe && (
+                <ModalSubscribe isOpen={isOpen} onClose={() => setIsOpen(false)} />
+              )}
+            </IntlProvider>
+          </ChannelContext.Provider>
+        </SubscribeContext.Provider>
+      </CountContextProvider>
+    </GameContextProvider>
   );
 };
 
