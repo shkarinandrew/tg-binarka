@@ -1,0 +1,57 @@
+variables:
+  PIPELINELIB_VERSION: &PL_REF v0.11.1
+
+include:
+  - project: devops/pipelines
+    ref: *PL_REF
+    file:
+      - /settings.yaml
+      - /lib/workflows/general.yaml
+      - /lib/build/nodejs.yaml
+      - /lib/build/oci.yaml
+      - /lib/gitops/rollout.yaml
+
+
+.build_vars:
+  - export VITE_PORT=3000
+  - echo $DEPLOY_TARGET
+  - |
+    if [ "$DEPLOY_TARGET" == "dev" ]; then
+        export VITE_APP_API_URL=$VITE_APP_API_URL_DEV
+        export VITE_APP_TOKEN=$VITE_APP_TOKEN_DEV
+        export VITE_TIME_SECOND=$VITE_TIME_SECOND_DEV
+        export VITE_COUNT_WIN_OR_LOSE=$VITE_COUNT_WIN_OR_LOSE_DEV
+    elif [ "$DEPLOY_TARGET" == "production" ]; then
+        export VITE_APP_API_URL=$VITE_APP_API_URL_PROD
+        export VITE_APP_TOKEN=$VITE_APP_TOKEN_PROD
+        export VITE_TIME_SECOND=$VITE_TIME_SECOND_PROD
+        export VITE_COUNT_WIN_OR_LOSE=$VITE_COUNT_WIN_OR_LOSE_PROD
+    else
+        echo "Переменная DEPLOY_TARGET имеет некорректное значение: $DEPLOY_TARGET"
+    fi
+    
+stages:
+  - build
+  - rollout
+
+build dist:
+  extends:
+    - .build/nodejs
+  before_script:
+    - !reference [ .build_vars ]
+    - !reference [ .build/nodejs, before_script ]
+
+build image:
+  extends: .build/oci
+  variables:
+    USE_CORP_CR: 1
+    OCI_PROJECT_NAME: binarka/frontend
+  needs: ["build dist"]
+  dependencies: ["build dist"]
+
+rollout dev:
+  extends: .gitops/rollout
+  rules: !reference [.rules/rollout-dev]
+  variables:
+    SERVICE_NAME: binarka-frontend
+    ENV_NAME: dev
