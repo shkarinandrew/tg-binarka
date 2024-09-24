@@ -1,29 +1,30 @@
-import { FC, useEffect, useState } from 'react';
+import { FC } from 'react';
 
 import UsdtIcon from '../../../assets/icons/usdt.svg';
-import { IChartHeader } from './ChartHeader.interface';
+import { useCount } from '../../../hooks';
 
-const ChartHeader: FC<IChartHeader> = ({ count }) => {
-  const [animateCount, setAnimateCount] = useState(count);
+const ChartHeader: FC = () => {
+  const { count } = useCount();
+  // const [animateCount, setAnimateCount] = useState(count);
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setAnimateCount((prevCount) => {
-        if (prevCount === count) {
-          clearInterval(timer);
-          return count;
-        }
+  // useEffect(() => {
+  //   const timer = setInterval(() => {
+  //     setAnimateCount((prevCount) => {
+  //       if (prevCount === count) {
+  //         clearInterval(timer);
+  //         return count;
+  //       }
 
-        if (prevCount > count) {
-          return prevCount - 1;
-        }
+  //       if (prevCount > count) {
+  //         return prevCount - 1;
+  //       }
 
-        return prevCount + 1;
-      });
-    }, 10); // Регулируйте скорость анимации, изменяя это значение
+  //       return prevCount + 1;
+  //     });
+  //   }, 10); // Регулируйте скорость анимации, изменяя это значение
 
-    return () => clearInterval(timer);
-  }, [count]);
+  //   return () => clearInterval(timer);
+  // }, [count]);
 
   return (
     <div className='flex justify-between items-center w-full border-b border-b-gray py-[10px] text-base sm:text-[19px] md:text-[20px] xl:text-[21px]'>
@@ -31,7 +32,7 @@ const ChartHeader: FC<IChartHeader> = ({ count }) => {
         <UsdtIcon />
         USDT-BTC
       </div>
-      <div className='w-1/2 text-right mr-5'>{animateCount}</div>
+      <div className='w-1/2 text-right mr-5'>{count.toFixed(2)}</div>
     </div>
   );
 };
