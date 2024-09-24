@@ -5,7 +5,3 @@
 a[title='Charting by TradingView'] {
   display: none;
 }
-
-#chart .tv-lightweight-charts:first-child {
-  display: none;
-}
